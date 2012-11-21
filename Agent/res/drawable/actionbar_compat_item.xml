@@ -14,12 +14,10 @@
   limitations under the License.
   -->
 
-<resources>
-    <string name="app_name">Agent</string>
-    <string name="alternate_title">An alternate title that is long</string>
-    <string name="toggle_title">Toggle title</string>
-
-    <string name="menu_refresh">Refresh</string>
-    <string name="menu_search">Search</string>
-    <string name="menu_share">Share</string>
-</resources>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/actionbar_compat_item_pressed"
+        android:state_pressed="true" />
+    <item android:drawable="@drawable/actionbar_compat_item_focused"
+        android:state_focused="true" />
+    <item android:drawable="@android:color/transparent" />
+</selector>

@@ -14,12 +14,6 @@
   limitations under the License.
   -->
 
-<resources>
-    <string name="app_name">Agent</string>
-    <string name="alternate_title">An alternate title that is long</string>
-    <string name="toggle_title">Toggle title</string>
-
-    <string name="menu_refresh">Refresh</string>
-    <string name="menu_search">Search</string>
-    <string name="menu_share">Share</string>
-</resources>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#ef7000" />
+</shape>
