@@ -14,12 +14,37 @@
   limitations under the License.
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    <Button android:id="@+id/toggle_title"
-        android:layout_width="wrap_content"
+
+
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+
+    <TextView
+            android:id="@+id/label_last_snmp_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="16dp"
+            android:text="@string/last_snmp_request"/>
+
+    <TextView
+            android:id="@+id/last_snmp_request_text"
+            android:layout_toRightOf="@id/label_last_snmp_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:text="@string/last_snmp_request"/>
+
+    <Button android:id="@+id/danger_alert_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/toggle_title" />
-</FrameLayout>
+        android:layout_below="@id/last_snmp_request_text"
+        android:text="@string/danger_alert_button" />
+</RelativeLayout>

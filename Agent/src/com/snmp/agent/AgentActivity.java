@@ -1,47 +1,41 @@
 package com.snmp.agent;
 
-import android.app.Activity;
-import android.os.Bundle;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.*;
 
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.snmp.actionbarcompat.ActionBarActivity;
-import org.snmp4j.*;
-import org.snmp4j.mp.MPv3;
-import org.snmp4j.mp.MessageProcessingModel;
-import org.snmp4j.security.SecurityModels;
-import org.snmp4j.security.SecurityProtocols;
-import org.snmp4j.security.USM;
-import org.snmp4j.smi.*;
-import org.snmp4j.mp.SnmpConstants;
-import org.snmp4j.transport.DefaultUdpTransportMapping;
 
-import java.io.IOException;
+public class AgentActivity extends ActionBarActivity implements View.OnClickListener {
+    /** Messenger for communicating with service. */
+    Messenger mService = null;
+    /** Flag indicating whether we have called bind on the service. */
+    boolean mIsBound;
 
-public class AgentActivity extends ActionBarActivity implements CommandResponder {
-    /** Called when the activity is first created. */
-    private boolean mAlternateTitle = false;
+    private TextView lastRequestReceiverTextView;
+    private Button dangerButton;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        findViewById(R.id.toggle_title).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mAlternateTitle) {
-                    setTitle(R.string.app_name);
-                } else {
-                    setTitle(R.string.alternate_title);
-                }
-                mAlternateTitle = !mAlternateTitle;
-            }
-        });
+        lastRequestReceiverTextView = (TextView) findViewById(R.id.last_snmp_request_text);
+        dangerButton = (Button) findViewById(R.id.danger_alert_button);
+        dangerButton.setOnClickListener(this);
 
-        new AgentListener().start();
+
+        Intent intent = new Intent(this, AgentService.class);
+        startService(intent);
+        doBindAgentService();
     }
 
     @Override
@@ -60,87 +54,122 @@ public class AgentActivity extends ActionBarActivity implements CommandResponder
             case android.R.id.home:
                 Toast.makeText(this, "Tapped home", Toast.LENGTH_SHORT).show();
                 break;
-
-            case R.id.menu_refresh:
-                Toast.makeText(this, "Fake refreshing...", Toast.LENGTH_SHORT).show();
-                getActionBarHelper().setRefreshActionItemState(true);
-                getWindow().getDecorView().postDelayed(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                getActionBarHelper().setRefreshActionItemState(false);
-                            }
-                        }, 1000);
-                break;
-
-            case R.id.menu_search:
-                Toast.makeText(this, "Tapped search", Toast.LENGTH_SHORT).show();
-                break;
-
-            case R.id.menu_share:
-                Toast.makeText(this, "Tapped share", Toast.LENGTH_SHORT).show();
-                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.danger_alert_button:
+                handleSendDangerAlert();
+                break;
+        }
+    }
 
-    private class AgentListener extends Thread {
+    private void handleSendDangerAlert() {
+        Message msg = Message.obtain(null,
+                AgentService.MSN_SEND_DANGER_TRAP);
+        msg.replyTo = mMessenger;
+        sendMessageToAgentService(msg);
+    }
 
-        private Snmp snmp;
-
-        private void sendTrap(){
-            PDUv1 pdu = new PDUv1();
-            pdu.setType(PDU.V1TRAP);
-            pdu.setGenericTrap(PDUv1.COLDSTART);
-
-            // Specify receiver
-            Address targetAddress = new UdpAddress("192.168.0.103/1610");
-            CommunityTarget target = new CommunityTarget();
-            target.setCommunity(new OctetString("public"));
-            target.setVersion(SnmpConstants.version1);
-            target.setAddress(targetAddress);
-
-            try {
-                snmp.trap(pdu, target);
-            } catch (IOException e) {
-                e.printStackTrace();
+    /**
+     * Handler of incoming messages from service.
+     */
+    class IncomingHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case AgentService.MSG_SET_VALUE:
+                    break;
+                case AgentService.MSG_SNMP_REQUEST_RECEIVED:
+                    lastRequestReceiverTextView.setText(AgentService.lastRequestReceived);
+                default:
+                    super.handleMessage(msg);
             }
         }
+    }
 
-        public void run() {
+    private void sendMessageToAgentService(Message msg){
+        try {
+            mService.send(msg);
+        } catch (RemoteException e) {
+
+        }
+    }
+
+    /**
+     * Target we publish for clients to send messages to IncomingHandler.
+     */
+    final Messenger mMessenger = new Messenger(new IncomingHandler());
+
+    /**
+     * Class for interacting with the main interface of the service.
+     */
+    private ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+
+            mService = new Messenger(service);
+
+            // We want to monitor the service for as long as we are
+            // connected to it.
             try {
-                TransportMapping transport = null;
-                transport = new DefaultUdpTransportMapping(new UdpAddress("0.0.0.0/1610"));
+                Message msg = Message.obtain(null,
+                        AgentService.MSG_REGISTER_CLIENT);
+                msg.replyTo = mMessenger;
+                mService.send(msg);
 
-                snmp = new Snmp(transport);
-                //if (SnmpConstants.version3) {
-                    byte[] localEngineID =
-                            ((MPv3)snmp.getMessageProcessingModel(MessageProcessingModel.MPv3)).createLocalEngineID();
-                    USM usm = new USM(SecurityProtocols.getInstance(),
-                            new OctetString(localEngineID), 0);
-                    SecurityModels.getInstance().addSecurityModel(usm);
-                    snmp.setLocalEngine(localEngineID, 0, 0);
-                    // Add the configured user to the USM
+                // Give it some value as an example.
+                msg = Message.obtain(null,
+                        AgentService.MSG_SET_VALUE, this.hashCode(), 0);
+                mService.send(msg);
+            } catch (RemoteException e) {
 
-                //}
-                snmp.addCommandResponder(AgentActivity.this);
-                snmp.listen();
-
-            }  catch (IOException e) {
-                e.printStackTrace();
             }
+
         }
 
+        public void onServiceDisconnected(ComponentName className) {
+            // This is called when the connection with the service has been
+            // unexpectedly disconnected -- that is, its process crashed.
+            mService = null;
+        }
+    };
+
+    void doBindAgentService() {
+        // Establish a connection with the service.  We use an explicit
+        // class name because there is no reason to be able to let other
+        // applications replace our component.
+        bindService(new Intent(this, AgentService.class), mConnection, Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+
+    void doUnbindAgentService() {
+        if (mIsBound) {
+            // If we have received the service, and hence registered with
+            // it, then now is the time to unregister.
+            if (mService != null) {
+                try {
+                    Message msg = Message.obtain(null,
+                            AgentService.MSG_UNREGISTER_CLIENT);
+                    msg.replyTo = mMessenger;
+                    mService.send(msg);
+                } catch (RemoteException e) {
+
+                }
+            }
+
+            // Detach our existing connection.
+            unbindService(mConnection);
+            mIsBound = false;
+        }
     }
 
     @Override
-    public synchronized void processPdu(CommandResponderEvent commandResponderEvent) {
-        System.out.println("Chegou algo aqui!!! Dale Dale");
-        PDU command = commandResponderEvent.getPDU();
-        System.out.println(command.toString());
-        if (command != null) {
-
-        }
+    protected void onDestroy() {
+        doUnbindAgentService();
+        super.onDestroy();
     }
 }
