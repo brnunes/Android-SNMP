@@ -1,0 +1,130 @@
+
+ANDROID-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+	enterprises, TimeTicks
+		FROM RFC1155-SMI
+	OBJECT-TYPE
+		FROM RFC-1212;
+
+ufrgs                OBJECT IDENTIFIER ::= { enterprises 12619 }
+android              OBJECT IDENTIFIER ::= { ufrgs 1 }
+services             OBJECT IDENTIFIER ::= { android 1 }
+
+-- The hardware status.
+
+hardware             OBJECT IDENTIFIER ::= { android 2 }
+
+srvcNumber  OBJECT-TYPE
+	SYNTAX     INTEGER
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"The number of services currently running on device."
+	::= { services 1 }
+
+srvcTable  OBJECT-TYPE
+	SYNTAX SEQUENCE OF SrvcEntry
+	ACCESS     not-accessible
+	STATUS     mandatory
+	DESCRIPTION 
+		"A list of the services currently running on device. The number of entries is given by the value of srvcNumber."
+	::= { services 2 }
+
+srvcEntry  OBJECT-TYPE
+	SYNTAX 	SrvcEntry
+	ACCESS     not-accessible
+	STATUS     mandatory
+	DESCRIPTION 
+		""
+	INDEX { srvcIndex }
+	::= { srvcTable 1 }
+
+SrvcEntry ::= SEQUENCE {
+	srvcIndex
+		INTEGER,
+	srvcDescr
+		OCTET STRING,
+	srvcRunningTime
+		TimeTicks
+}
+
+srvcIndex  OBJECT-TYPE
+	SYNTAX     INTEGER
+	ACCESS     read-write
+	STATUS     mandatory
+	DESCRIPTION 
+		""
+	::= { srvcEntry 1 }
+
+srvcDescr  OBJECT-TYPE
+	SYNTAX     INTEGER
+	ACCESS     read-write
+	STATUS     mandatory
+	DESCRIPTION 
+		""
+	::= { srvcEntry 2 }
+
+srvcRunningTime  OBJECT-TYPE
+	SYNTAX     TimeTicks
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		""
+	::= { srvcEntry 3 }
+
+srvcMemoryUsed  OBJECT-TYPE
+	SYNTAX     INTEGER
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		""
+	::= { srvcEntry 4 }
+
+hwBatteryStatus  OBJECT-TYPE
+	SYNTAX     INTEGER (0|1)
+	ACCESS     read-write
+	STATUS     mandatory
+	DESCRIPTION 
+		"Battery charge level of the device:
+		
+		0 - OFF
+		1 - ON"
+	DEFVAL  { 0 }
+	::= { hardware 1 }
+
+hwGPSStatus  OBJECT-TYPE
+	SYNTAX     INTEGER (0|1)
+	ACCESS     read-write
+	STATUS     mandatory
+	DESCRIPTION 
+		"The GPS Status:
+		
+		0 - OFF
+		1 - ON"
+	::= { hardware 2 }
+
+hwBluetoothStatus  OBJECT-TYPE
+	SYNTAX     INTEGER (0|1)
+	ACCESS     read-write
+	STATUS     mandatory
+	DESCRIPTION 
+		"The Bluetooth Status:
+		
+		0 - OFF
+		1 - ON"
+	::= { hardware 3 }
+
+hwNetworkStatus  OBJECT-TYPE
+	SYNTAX     INTEGER (0|1)
+	ACCESS     read-write
+	STATUS     mandatory
+	DESCRIPTION 
+		"The Network Status:
+		
+		0 - OFF
+		1 - ON"
+	::= { hardware 4 }
+END
+
+-- This MIB was created using NuDesign Team's Visual MIBuilder (Ver 4.9).
