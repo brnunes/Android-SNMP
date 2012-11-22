@@ -49,6 +49,15 @@ public class GerenteMain {
         }
     };
 
+    CommandResponder trapPrinter = new CommandResponder() {
+        public synchronized void processPdu(CommandResponderEvent e) {
+            PDU command = e.getPDU();
+            if (command != null) {
+                System.out.println(command.toString());
+            }
+        }
+    };
+
     private void sendGetNextRequest(){
         // creating PDU
         PDU pdu = new PDU();
@@ -65,8 +74,10 @@ public class GerenteMain {
         target.setVersion(SnmpConstants.version1);
 
         try {
-            snmp = new Snmp(new DefaultUdpTransportMapping(new UdpAddress("192.168.0.103/1610")));
+            snmp = new Snmp(new DefaultUdpTransportMapping(new UdpAddress("0.0.0.0/1610")));
             snmp.send(pdu, target, null, listener);
+            snmp.addCommandResponder(trapPrinter);
+            snmp.listen();
 
         }  catch (IOException e) {
             e.printStackTrace();
