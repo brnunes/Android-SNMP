@@ -1,21 +1,20 @@
-package com.snmp.agent;
+package com.snmp.agent.service;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.*;
 import android.util.Log;
+import com.snmp.agent.model.MIBtree;
 import org.snmp4j.*;
-import org.snmp4j.mp.MPv3;
-import org.snmp4j.mp.MessageProcessingModel;
+import org.snmp4j.asn1.BERInputStream;
 import org.snmp4j.mp.SnmpConstants;
-import org.snmp4j.security.SecurityModels;
-import org.snmp4j.security.SecurityProtocols;
-import org.snmp4j.security.USM;
 import org.snmp4j.smi.*;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class AgentService extends Service implements CommandResponder {
 
@@ -24,15 +23,18 @@ public class AgentService extends Service implements CommandResponder {
     /** Holds last value set by a client. */
     int mValue = 0;
 
-    static final int MSG_REGISTER_CLIENT = 1;
-    static final int MSG_UNREGISTER_CLIENT = 2;
-    static final int MSG_SET_VALUE = 3;
-    static final int MSG_SNMP_REQUEST_RECEIVED = 4;
+    public static final int MSG_REGISTER_CLIENT = 1;
+    public static final int MSG_UNREGISTER_CLIENT = 2;
+    public static final int MSG_SET_VALUE = 3;
+    public static final int MSG_SNMP_REQUEST_RECEIVED = 4;
     public static final int MSN_SEND_DANGER_TRAP = 5;
 
     public static String lastRequestReceived = "";
 
     private Snmp snmp;
+    private static ArrayList<Address> registeredManagers = null;
+
+    private MIBtree MIB_MAP;
 
     /**
      * Handler of incoming messages from clients.
@@ -102,6 +104,10 @@ public class AgentService extends Service implements CommandResponder {
 
     }
 
+    public void initMIB_MAP() {
+        MIB_MAP = new MIBtree();
+    }
+
     private class SendTrap extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... params) {
             PDUv1 pdu = new PDUv1();
@@ -110,7 +116,7 @@ public class AgentService extends Service implements CommandResponder {
             pdu.add(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 2})));
 
             // Specify receiver
-            Address targetAddress = new UdpAddress("192.168.0.103/1610");
+            Address targetAddress = new UdpAddress("192.168.0.102/1610");
             CommunityTarget target = new CommunityTarget();
             target.setCommunity(new OctetString("public"));
             target.setVersion(SnmpConstants.version1);
@@ -157,15 +163,81 @@ public class AgentService extends Service implements CommandResponder {
         }
     }
 
-    @Override
-    public synchronized void processPdu(CommandResponderEvent commandResponderEvent) {
-        PDU command = commandResponderEvent.getPDU();
+    public static ArrayList<Address> getRegisteredManagers(){
+        if(registeredManagers == null) return new ArrayList<Address>();
+        return registeredManagers;
+    }
 
-        //lastRequestReceiverTextView.setText(command.toString() + " " + commandResponderEvent.getPeerAddress().toString());
-        if (command != null) {
-            System.out.println(command.toString() + " " + commandResponderEvent.getPeerAddress().toString());
-            lastRequestReceived = command.toString() + " " + commandResponderEvent.getPeerAddress().toString();
-            sendMessageToClients(MSG_SNMP_REQUEST_RECEIVED);
+    private static void registerManager(Address address){
+        if(registeredManagers == null){
+            registeredManagers = new ArrayList<Address>();
+            registeredManagers.add(address);
+        } else {
+            boolean exists = false;
+            for(Address a : registeredManagers){
+                if(a.toString().equals(address.toString())) exists=true;
+            }
+            if(!exists) registeredManagers.add(address);
         }
     }
+
+    @Override
+    public synchronized void processPdu(CommandResponderEvent commandResponderEvent) {
+        PDU command = (PDU) commandResponderEvent.getPDU().clone();
+        registerManager(commandResponderEvent.getPeerAddress());
+
+        if (command != null) {
+            lastRequestReceived = command.toString() + " " + commandResponderEvent.getPeerAddress();
+            sendMessageToClients(MSG_SNMP_REQUEST_RECEIVED);
+            if (command.getType() == PDU.GET){
+                handleGetRequest(command);
+            } else if(command.getType() == PDU.GETNEXT){
+                handleGetNextRequest(command);
+            }
+            Address address = commandResponderEvent.getPeerAddress();
+            sendResponse(address, command);
+        }
+    }
+
+    private void sendResponse(Address address, PDU command) {
+        System.out.println(command.toString());
+        // Specify receiver
+        CommunityTarget target = new CommunityTarget();
+        target.setCommunity(new OctetString("public"));
+        target.setVersion(SnmpConstants.version1);
+        target.setAddress(address);
+        target.setRetries(2);
+        target.setTimeout(1500);
+
+        try {
+            snmp.send(command, target);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleGetNextRequest(PDU command) {
+
+    }
+
+    private void handleGetRequest(PDU command) {
+        VariableBinding varBind;
+        for(int i = 0; i < command.size(); i++){
+            varBind = command.get(i);
+            varBind.setVariable(answerForGet(varBind.getOid()));
+
+        }
+    }
+
+    private Variable answerForGet(OID oid) {
+        Variable ret = new OctetString("Modelo Valor 3");
+        return ret;
+    }
+
+
 }
+
+/* MIB OIDs
+
+
+ */

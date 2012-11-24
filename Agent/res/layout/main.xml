@@ -16,35 +16,55 @@
 
 
 
-<RelativeLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:gravity="center"
         android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="2"
+        android:orientation="vertical">
 
-    <TextView
-            android:id="@+id/label_last_snmp_request"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="16dp"
-            android:text="@string/last_snmp_request"/>
-
-    <TextView
-            android:id="@+id/last_snmp_request_text"
-            android:layout_toRightOf="@id/label_last_snmp_request"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            android:text="@string/last_snmp_request"/>
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dip"
+                android:text="@string/list_of_managers_label"/>
+        <ListView
+                android:id="@+id/list_of_registered_managers"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                />
 
     <Button android:id="@+id/danger_alert_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_below="@id/last_snmp_request_text"
         android:text="@string/danger_alert_button" />
-</RelativeLayout>
+
+
+
+    </LinearLayout>
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/snmp_messages_history"
+            android:orientation="vertical"
+            />
+
+
+
+    </ScrollView>
+
+
+
+</LinearLayout>
