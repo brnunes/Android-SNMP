@@ -83,7 +83,43 @@ public class AgentService extends Service implements CommandResponder {
 
     @Override
     public void onCreate() {
+        /*MIB_MAP = new MIBtree();
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,2,2,1,1,4}), new Integer32(2)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,2,2,1,1,3}), new OctetString("BLALBAL3")));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,2,1,1,1}), new OctetString("BLALBAL1")));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,2,1,1,2}), new OctetString("BLALBAL2")));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,2,2,1,1,4}), new Integer32(1)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,2,2,1,1,4}), new Integer32(3)));
+        MIB_MAP.print();
+        System.out.println(MIB_MAP.get(new OID(new int[] {1,3,6,1,2,1,1,1,0})).toString());
+        MIB_MAP.set(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 1, 0}), new OctetString("BLALBAL23")));
+        System.out.println(MIB_MAP.get(new OID(new int[] {1,3,6,1,2,1,1,1,0})).toString());
+        System.out.println(MIB_MAP.getNext(new OID(new int[]{1, 3, 6, 2, 2, 1, 1, 3})).toString());
+        System.out.println(MIB_MAP.getNext(new OID(new int[] {1,3,6,1,2,1,1,2,0})).toString()); */
+        initMIBWithDefault();
         new AgentListener().start();
+    }
+
+    private void initMIBWithDefault(){
+        MIB_MAP = MIBtree.getInstance();
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,1}), new OctetString("Modelo x")));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,2}), new OctetString("4.0")));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,3}), new TimeTicks(100000)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,1}), new Integer32(2)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,1}), new Integer32(1)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,1}), new Integer32(2)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,2}), new OctetString("BALBA")));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,2}), new OctetString("BALBA2")));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,3}), new TimeTicks(98361456)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,3}), new TimeTicks(234452652)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,4}), new Integer32(4568)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,4}), new Integer32(6456)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,1}), new Integer32(1)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,2}), new Integer32(100)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,3}), new Integer32(0)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,4}), new Integer32(0)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,5}), new Integer32(1)));
+        MIB_MAP.print();
     }
 
     @Override
@@ -102,10 +138,6 @@ public class AgentService extends Service implements CommandResponder {
     @Override
     public void onDestroy() {
 
-    }
-
-    public void initMIB_MAP() {
-        MIB_MAP = new MIBtree();
     }
 
     private class SendTrap extends AsyncTask<Void, Void, Void> {
@@ -217,7 +249,16 @@ public class AgentService extends Service implements CommandResponder {
     }
 
     private void handleGetNextRequest(PDU command) {
+        VariableBinding varBind;
+        for(int i = 0; i < command.size(); i++){
+            varBind = command.get(i);
+            command.set(i, answerForGetNext(varBind.getOid()));
+        }
+    }
 
+    private VariableBinding answerForGetNext(OID oid) {
+        VariableBinding vb = MIB_MAP.getNext(oid);
+        return vb;
     }
 
     private void handleGetRequest(PDU command) {
@@ -230,8 +271,8 @@ public class AgentService extends Service implements CommandResponder {
     }
 
     private Variable answerForGet(OID oid) {
-        Variable ret = new OctetString("Modelo Valor 3");
-        return ret;
+        VariableBinding vb = MIB_MAP.get(oid);
+        return vb.getVariable();
     }
 
 
