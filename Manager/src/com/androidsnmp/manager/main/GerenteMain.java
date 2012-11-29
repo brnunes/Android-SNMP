@@ -1,3 +1,4 @@
+package com.androidsnmp.manager.main;
 /**
  *
  * User: paulo
@@ -5,8 +6,17 @@
  * Time: 11:57 PM
  */
 
-import org.snmp4j.*;
-import org.snmp4j.event.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
+
+import org.snmp4j.CommandResponder;
+import org.snmp4j.CommandResponderEvent;
+import org.snmp4j.CommunityTarget;
+import org.snmp4j.PDU;
+import org.snmp4j.Snmp;
+import org.snmp4j.event.ResponseEvent;
+import org.snmp4j.event.ResponseListener;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
@@ -14,19 +24,7 @@ import org.snmp4j.smi.UdpAddress;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.Console;
-import java.io.IOException;
-
 public class GerenteMain {
-
-
-
     private Snmp snmp;
 
 
@@ -58,7 +56,7 @@ public class GerenteMain {
         }
     };
 
-    private void sendGetNextRequest(){
+    public void sendGetNextRequest(){
         // creating PDU
         PDU pdu = new PDU();
         pdu.add(new VariableBinding(new OID(new int[] {1,3,6,1,2,1,1,1})));
@@ -82,24 +80,5 @@ public class GerenteMain {
         }  catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
-
-
-    public static void main(String[] args) {
-
-        // Create window console
-        MyWin mw = new MyWin();
-        mw.addWindowListener ( new WindowAdapter() {
-            public void windowClosing (WindowEvent e) {
-                System.exit(0);
-            }
-        });
-
-        GerenteMain gerenteMain = new GerenteMain();
-        gerenteMain.sendGetNextRequest();
-
-    }
-
 }
