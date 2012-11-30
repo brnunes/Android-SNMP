@@ -89,7 +89,7 @@ public class ActionBarHelperBase extends ActionBarHelper {
         }
 
         LinearLayout.LayoutParams springLayoutParams = new LinearLayout.LayoutParams(
-                0, ViewGroup.LayoutParams.FILL_PARENT);
+                0, ViewGroup.LayoutParams.MATCH_PARENT);
         springLayoutParams.weight = 1;
 
         // Add Home button
@@ -184,7 +184,7 @@ public class ActionBarHelperBase extends ActionBarHelper {
                         itemId == android.R.id.home
                                 ? R.dimen.actionbar_compat_button_home_width
                                 : R.dimen.actionbar_compat_button_width),
-                ViewGroup.LayoutParams.FILL_PARENT));
+                ViewGroup.LayoutParams.MATCH_PARENT));
         if (itemId == R.id.menu_refresh) {
             actionButton.setId(R.id.actionbar_compat_item_refresh);
         }

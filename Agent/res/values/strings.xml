@@ -22,6 +22,8 @@
     <string name="menu_refresh">Refresh</string>
     <string name="menu_search">Search</string>
     <string name="menu_share">Share</string>
-    <string name="danger_alert_button">Danger</string>
+    <string name="danger_alert_button">Send Danger Warning</string>
     <string name="last_snmp_request">Last SNMP Request:</string>
+    <string name="last_snmp_request_get">Last GET:</string>
+    <string name="list_of_managers_label">Registered Managers</string>
 </resources>

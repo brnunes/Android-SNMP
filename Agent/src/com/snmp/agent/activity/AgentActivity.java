@@ -1,4 +1,4 @@
-package com.snmp.agent;
+package com.snmp.agent.activity;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,10 +10,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.snmp.actionbarcompat.ActionBarActivity;
+import com.snmp.agent.service.AgentService;
+import com.snmp.agent.R;
+import org.snmp4j.smi.Address;
+
+import java.util.ArrayList;
 
 public class AgentActivity extends ActionBarActivity implements View.OnClickListener {
     /** Messenger for communicating with service. */
@@ -21,14 +24,20 @@ public class AgentActivity extends ActionBarActivity implements View.OnClickList
     /** Flag indicating whether we have called bind on the service. */
     boolean mIsBound;
 
-    private TextView lastRequestReceiverTextView;
+    private LinearLayout messagesReceivedScrollView;
+    private ListView registeredManagersList;
+    private ArrayAdapter<Address> registeredManagersAdapter;
     private Button dangerButton;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        lastRequestReceiverTextView = (TextView) findViewById(R.id.last_snmp_request_text);
+        messagesReceivedScrollView = (LinearLayout) findViewById(R.id.snmp_messages_history);
+
+        registeredManagersAdapter = new ArrayAdapter<Address>(this, android.R.layout.simple_list_item_1, new ArrayList<Address>());
+        registeredManagersList = (ListView) findViewById(R.id.list_of_registered_managers);
+        registeredManagersList.setAdapter(registeredManagersAdapter);
         dangerButton = (Button) findViewById(R.id.danger_alert_button);
         dangerButton.setOnClickListener(this);
 
@@ -84,7 +93,12 @@ public class AgentActivity extends ActionBarActivity implements View.OnClickList
                 case AgentService.MSG_SET_VALUE:
                     break;
                 case AgentService.MSG_SNMP_REQUEST_RECEIVED:
-                    lastRequestReceiverTextView.setText(AgentService.lastRequestReceived);
+                    TextView aux = new TextView(AgentActivity.this);
+                    aux.setText(AgentService.lastRequestReceived);
+                    messagesReceivedScrollView.addView(aux);
+                    registeredManagersAdapter.clear();
+                    registeredManagersAdapter.addAll(AgentService.getRegisteredManagers());
+                    registeredManagersList.setAdapter(registeredManagersAdapter);
                 default:
                     super.handleMessage(msg);
             }
