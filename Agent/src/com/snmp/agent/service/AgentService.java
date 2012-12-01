@@ -14,6 +14,8 @@ import org.snmp4j.transport.DefaultUdpTransportMapping;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeSet;
 
 public class AgentService extends Service implements CommandResponder {
@@ -35,6 +37,7 @@ public class AgentService extends Service implements CommandResponder {
     private static ArrayList<Address> registeredManagers = null;
 
     private MIBtree MIB_MAP;
+    private Timer timer;
 
     /**
      * Handler of incoming messages from clients.
@@ -97,34 +100,38 @@ public class AgentService extends Service implements CommandResponder {
         System.out.println(MIB_MAP.getNext(new OID(new int[]{1, 3, 6, 2, 2, 1, 1, 3})).toString());
         System.out.println(MIB_MAP.getNext(new OID(new int[] {1,3,6,1,2,1,1,2,0})).toString()); */
         initMIBWithDefault();
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new RefreshMIBData(), 0, 50000);
         new AgentListener().start();
     }
 
     private void initMIBWithDefault(){
         MIB_MAP = MIBtree.getInstance();
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,1}), new OctetString("Modelo x")));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,2}), new OctetString("4.0")));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,3}), new TimeTicks(100000)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,1}), new Integer32(2)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,1}), new Integer32(1)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,1}), new Integer32(2)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,2}), new OctetString("BALBA")));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,2}), new OctetString("BALBA2")));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,3}), new TimeTicks(98361456)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,3}), new TimeTicks(234452652)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,4}), new Integer32(4568)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,4}), new Integer32(6456)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,1}), new Integer32(1)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,2}), new Integer32(100)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,3}), new Integer32(0)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,4}), new Integer32(0)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,5}), new Integer32(1)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,1,0}), new OctetString("Modelo x")));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,1,0}), new OctetString("Modelo bla")));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,2,0}), new OctetString("4.0")));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,3,0}), new TimeTicks(100000)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,1,0}), new Integer32(2)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,1,1}), new Integer32(1)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,1,2}), new Integer32(2)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,2,1}), new OctetString("BALBA")));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,2,2}), new OctetString("BALBA2")));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,3,1}), new TimeTicks(98361456)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,3,2}), new TimeTicks(234452652)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,4,1}), new Integer32(4568)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,4,2}), new Integer32(6456)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,1,0}), new Integer32(1)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,2,0}), new Integer32(100)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,3,0}), new Integer32(0)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,4,0}), new Integer32(0)));
+        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,5,0}), new Integer32(1)));
         MIB_MAP.print();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("LocalService", "Received start id " + startId + ": " + intent);
+
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
         return START_STICKY;
@@ -276,9 +283,15 @@ public class AgentService extends Service implements CommandResponder {
     }
 
 
+    class RefreshMIBData extends TimerTask {
+        SystemInformation systemInformation;
+
+        public RefreshMIBData(){
+            systemInformation = new SystemInformation(AgentService.this);
+        }
+
+        public void run() {
+            systemInformation.updateSystemInformation();
+        }
+    }
 }
-
-/* MIB OIDs
-
-
- */

@@ -1,5 +1,6 @@
 package com.snmp.agent.activity;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,7 @@ public class AgentActivity extends ActionBarActivity implements View.OnClickList
     /** Flag indicating whether we have called bind on the service. */
     boolean mIsBound;
 
+
     private LinearLayout messagesReceivedScrollView;
     private ListView registeredManagersList;
     private ArrayAdapter<Address> registeredManagersAdapter;
@@ -45,6 +47,7 @@ public class AgentActivity extends ActionBarActivity implements View.OnClickList
         Intent intent = new Intent(this, AgentService.class);
         startService(intent);
         doBindAgentService();
+
     }
 
     @Override
@@ -96,8 +99,9 @@ public class AgentActivity extends ActionBarActivity implements View.OnClickList
                     TextView aux = new TextView(AgentActivity.this);
                     aux.setText(AgentService.lastRequestReceived);
                     messagesReceivedScrollView.addView(aux);
-                    registeredManagersAdapter.clear();
-                    registeredManagersAdapter.addAll(AgentService.getRegisteredManagers());
+                    registeredManagersAdapter = new ArrayAdapter<Address>(AgentActivity.this,
+                            android.R.layout.simple_list_item_1, AgentService.getRegisteredManagers());
+                    //registeredManagersAdapter.addAll(AgentService.getRegisteredManagers());
                     registeredManagersList.setAdapter(registeredManagersAdapter);
                 default:
                     super.handleMessage(msg);
