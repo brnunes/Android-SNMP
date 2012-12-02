@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="rebuild" name="SNMP4J">
+  <property name="src" value="src"/>
+  <property name="dest" value="dist/classes"/>
+  <property name="dist" value="dist/lib"/>
+  <property name="src2" value="test"/>
+  <property name="lib" value="lib"/>
+  <property name="doc" value="doc"/>
+  <path id="project.class.path">
+    <pathelement location="${dest}"/>
+    <pathelement location="${lib}/log4j-1.2.14.jar"/>
+    <pathelement location="${lib}/junit.jar"/>
+    <pathelement location="${lib}/unittest.jar"/>
+    <pathelement location="${jdk.home}/jre/lib/rt.jar"/>
+  </path>
+  <target depends="init" name="javacompile">
+    <javac classpathref="project.class.path" debug="on" deprecation="false"
+           destdir="${dest}" nowarn="true" source="1.6" target="1.6">
+      <src path="${src}"/>
+    </javac>
+  </target>
+  <target depends="resource,compile" name="archive">
+    <jar compress="true" destfile="${dist}/SNMP4J.jar">
+      <fileset dir="${dest}">
+        <include name="**/*.*"/>
+        <exclude name="**/*Test.class"/>
+        <exclude name="**/Test*.class"/>
+      </fileset>
+    </jar>
+  </target>
+  <target name="cleanup">
+    <delete file="${dist}/SNMP4J.jar"/>
+    <delete failonerror="false" includeemptydirs="true">
+      <fileset dir="${dest}"/>
+    </delete>
+  </target>
+  <target name="resource">
+    <copy todir="${dest}">
+      <fileset dir="${src}">
+        <include name="**/*.jpe"/>
+        <include name="**/*.jpeg"/>
+        <include name="**/*.rmf"/>
+        <include name="**/*.wav"/>
+        <include name="**/*.mid"/>
+        <include name="**/*.midi"/>
+        <include name="**/*.au"/>
+        <include name="**/*.gif"/>
+        <include name="**/*.png"/>
+        <include name="**/*.jpg"/>
+        <include name="**/*.aiff"/>
+        <include name="**/*.properties"/>
+      </fileset>
+    </copy>
+  </target>
+  <target name="javadoc">
+    <javadoc author="true" destdir="${doc}" classpathref="project.class.path"
+      packagenames="org.snmp4j,org.snmp4j.eventlist,org.snmp4j.security,org.snmp4j.security.event,org.snmp4j.transport,org.snmp4j.smi,org.snmp4j.event,org.snmp4j.asn1,org.snmp4j.mp,org.snmp4j.util,org.snmp4j.log,org.snmp4j.version"
+      protected="true" version="true" excludepackagenames="org.snmp4j.test,org.snmp4j.test.tools.console">
+      <fileset dir="${src}"/>
+      <doctitle>SNMP4J</doctitle>
+      <footer>Copyright 2003-2010 Frank Fock and Jochen Katz (SNMP4J.org)</footer>
+    </javadoc>
+  </target>
+  <target depends="cleanup" name="clean"/>
+  <target name="precompile"/>
+  <target depends="javacompile" name="compile"/>
+  <target name="postcompile"/>
+  <target depends="archive,javadoc,resource" name="package"/>
+  <target name="deploy"/>
+  <target depends="precompile,compile,postcompile,package,deploy" name="make"/>
+  <target depends="clean,make" name="rebuild"/>
+  <target name="init">
+    <mkdir dir="${dest}"/>
+    <mkdir dir="${dist}"/>
+  </target>
+  <target name="distribution" depends="archive">
+    <zip destfile="../snmp4j.zip">
+      <zipfileset dir="${src}" prefix="snmp4j/${src}">
+        <include name="**/*.java"/>
+        <include name="**/*.gif"/>
+        <include name="**/*.html"/>
+        <include name="**/*.properties"/>
+      </zipfileset>
+      <zipfileset dir="${lib}" prefix="snmp4j/${lib}"/>
+      <zipfileset dir="${dist}" prefix="snmp4j/${dist}"/>
+      <zipfileset file="build.xml" prefix="snmp4j/"/>
+      <zipfileset file="LICENSE-2_0.txt" prefix="snmp4j/"/>
+      <zipfileset file="NOTICE" prefix="snmp4j/"/>
+      <zipfileset file="CHANGES.txt" prefix="snmp4j/"/>
+      <zipfileset file="LICENSE.log4j" prefix="snmp4j/"/>
+    </zip>
+  </target>
+  <target name="javadoc-dist" depends="javadoc">
+    <zip destfile="../snmp4j-doc.zip">
+      <zipfileset dir="${doc}" prefix="snmp4j/${doc}">
+        <include name="**/*.css"/>
+        <include name="**/*.gif"/>
+        <include name="**/*.html"/>
+        <include name="**/package-list"/>
+      </zipfileset>
+    </zip>
+  </target>
+  <target name="tool-distribution" depends="archive">
+    <zip destfile="../snmp4j_tool.zip">
+      <zipfileset file="SNMP4J.jar" prefix="snmp4j_tool/"/>
+      <zipfileset file="snmp4j_usage.txt" prefix="snmp4j_tool/"/>
+      <zipfileset file="LICENSE-2_0.txt" prefix="snmp4j_tool/"/>
+      <zipfileset file="NOTICE" prefix="snmp4j_tool/"/>
+      <zipfileset file="CHANGES.txt" prefix="snmp4j_tool/"/>
+      <zipfileset file="LICENSE.log4j" prefix="snmp4j_tool/"/>
+    </zip>
+  </target>
+</project>

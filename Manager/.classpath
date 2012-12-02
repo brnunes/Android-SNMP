@@ -2,5 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/brnunes/workspace/Android-SNMP/snmp4j-2.1.0/dist/snmp4j-2.1.0.jar"/>
+	<classpathentry kind="lib" path="/home/brnunes/workspace/Android-SNMP/snmp4j-2.1.0/dist/snmp4j-2.1.0-javadoc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
