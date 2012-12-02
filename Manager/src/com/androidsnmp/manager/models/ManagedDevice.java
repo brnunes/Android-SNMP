@@ -20,7 +20,9 @@ public class ManagedDevice {
     private PhonePanel phonePanel;
     
     public ManagedDevice(String ip) {
+        phonePanel = new PhonePanel(this);
         this.ip = ip;
+        phonePanel.setIpLabel(ip);
     }
 
     public String getIp() {
@@ -45,5 +47,33 @@ public class ManagedDevice {
 
     public int getBatteryLevel() {
         return batteryLevel;
+    }
+
+    public PhonePanel getPhonePanel() {
+        return phonePanel;
+    }
+    
+    public void gpsClicked() {                                      
+        System.out.println(ip + ": gpsLabelMouseClicked");
+    }                                     
+
+    public void networkClicked() {                                          
+        System.out.println(ip + ": networkLabelMouseClicked");
+    }                                         
+
+    public void bluetoothClicked() {                                            
+        System.out.println(ip + ": bluetoothLabelMouseClicked");
+    }                                           
+
+    public void batteryStatusClicked() {                                                
+        System.out.println(ip + ": batteryStatusLabelMouseClicked");
+    }                                               
+
+    public void batteryLevelClicked() {                                               
+        System.out.println(ip + ": batteryLevelLabelMouseClicked");
+    }
+    
+    public static boolean isIpValid(String ip) {
+        return ip.matches("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}");
     }
 }
