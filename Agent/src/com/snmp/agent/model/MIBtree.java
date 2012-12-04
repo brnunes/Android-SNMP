@@ -34,7 +34,7 @@ public class MIBtree {
     }
     private Node root;
 
-    private MIBtree() {
+    public MIBtree() {
         root = null;
     }
 
@@ -203,5 +203,20 @@ public class MIBtree {
         }
         return null;
     }
+
+   public void clearNode(OID oid){
+       synchronized (this) {
+           Node aux = root;
+           for(int i = 1; i < oid.size() && aux != null; i++){
+               aux = findNode(aux.children, oid.get(i), i);
+           }
+           aux.children.clear();
+           aux.children = null;
+       }
+   }
+
+   public static synchronized void setNewMIB(MIBtree mib) {
+       uniqInstance = mib;
+   }
 
 }
