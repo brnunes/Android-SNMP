@@ -5,6 +5,8 @@
 package com.androidsnmp.manager.models;
 
 import com.androidsnmp.manager.gui.PhonePanel;
+import com.androidsnmp.manager.main.SNMPMessenger;
+import org.snmp4j.smi.OID;
 
 /**
  *
@@ -18,11 +20,15 @@ public class ManagedDevice {
     private boolean batteryStatus;
     private int batteryLevel;
     private PhonePanel phonePanel;
+    private SNMPMessenger snmpMessenger;
     
     public ManagedDevice(String ip) {
-        phonePanel = new PhonePanel(this);
         this.ip = ip;
+        
+        phonePanel = new PhonePanel(this);
         phonePanel.setIpLabel(ip);
+        
+        snmpMessenger = new SNMPMessenger(ip, "1610");
     }
 
     public String getIp() {
@@ -53,8 +59,8 @@ public class ManagedDevice {
         return phonePanel;
     }
     
-    public void gpsClicked() {                                      
-        System.out.println(ip + ": gpsLabelMouseClicked");
+    public void gpsClicked() {
+        snmpMessenger.sengGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,3,2}));
     }                                     
 
     public void networkClicked() {                                          

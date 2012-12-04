@@ -38,13 +38,9 @@ public class AndroidSNMPManager {
                 managerFrame.setLocation(100,100);
                 managerFrame.setVisible(true);
                 
-                androidSNMPManager.addManagedDevice(new ManagedDevice("192.168.0.10"));
+                androidSNMPManager.addManagedDevice(new ManagedDevice("192.168.0.191"));
             }
         });
-        
-
-        GerenteMain gerenteMain = new GerenteMain();
-        gerenteMain.sendGetNextRequest();
     }
     
     public AndroidSNMPManager() {

@@ -39,11 +39,13 @@ public class PhonePanel extends javax.swing.JPanel {
         bluetoothLabel = new javax.swing.JLabel();
         batteryStatusLabel = new javax.swing.JLabel();
         batteryLevelLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         ipLabel = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(640, 360));
 
-        gpsLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/gps_icon.png"))); // NOI18N
+        gpsLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/res/gps_icon.png"))); // NOI18N
         gpsLabel.setToolTipText("Get GPS Status");
         gpsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -51,7 +53,7 @@ public class PhonePanel extends javax.swing.JPanel {
             }
         });
 
-        networkLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/gps_icon.png"))); // NOI18N
+        networkLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/res/gps_icon.png"))); // NOI18N
         networkLabel.setToolTipText("Get Network Status");
         networkLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -59,7 +61,7 @@ public class PhonePanel extends javax.swing.JPanel {
             }
         });
 
-        bluetoothLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/gps_icon.png"))); // NOI18N
+        bluetoothLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/res/bluetooth_icon.png"))); // NOI18N
         bluetoothLabel.setToolTipText("Get  Bluetooth Status");
         bluetoothLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -67,7 +69,7 @@ public class PhonePanel extends javax.swing.JPanel {
             }
         });
 
-        batteryStatusLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/gps_icon.png"))); // NOI18N
+        batteryStatusLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/res/gps_icon.png"))); // NOI18N
         batteryStatusLabel.setToolTipText("Get Battery Status");
         batteryStatusLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -75,13 +77,27 @@ public class PhonePanel extends javax.swing.JPanel {
             }
         });
 
-        batteryLevelLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/gps_icon.png"))); // NOI18N
+        batteryLevelLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/res/gps_icon.png"))); // NOI18N
         batteryLevelLabel.setToolTipText("Get Battery Level");
         batteryLevelLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 batteryLevelLabelMouseClicked(evt);
             }
         });
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jTable1.setPreferredSize(new java.awt.Dimension(360, 200));
+        jScrollPane1.setViewportView(jTable1);
 
         ipLabel.setText("IP: ");
 
@@ -90,16 +106,20 @@ public class PhonePanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(gpsLabel)
-                .addGap(0, 0, 0)
-                .addComponent(networkLabel)
-                .addGap(0, 0, 0)
-                .addComponent(bluetoothLabel)
-                .addGap(0, 0, 0)
-                .addComponent(batteryStatusLabel)
-                .addGap(0, 0, 0)
-                .addComponent(batteryLevelLabel))
-            .addComponent(ipLabel)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(gpsLabel)
+                        .addGap(0, 0, 0)
+                        .addComponent(networkLabel)
+                        .addGap(0, 0, 0)
+                        .addComponent(bluetoothLabel)
+                        .addGap(0, 0, 0)
+                        .addComponent(batteryStatusLabel)
+                        .addGap(0, 0, 0)
+                        .addComponent(batteryLevelLabel))
+                    .addComponent(ipLabel)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(280, 280, 280))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,7 +130,9 @@ public class PhonePanel extends javax.swing.JPanel {
                     .addComponent(bluetoothLabel)
                     .addComponent(batteryStatusLabel)
                     .addComponent(batteryLevelLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 271, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53)
                 .addComponent(ipLabel))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -152,6 +174,8 @@ public class PhonePanel extends javax.swing.JPanel {
     private javax.swing.JLabel bluetoothLabel;
     private javax.swing.JLabel gpsLabel;
     private javax.swing.JLabel ipLabel;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JLabel networkLabel;
     // End of variables declaration//GEN-END:variables
 }

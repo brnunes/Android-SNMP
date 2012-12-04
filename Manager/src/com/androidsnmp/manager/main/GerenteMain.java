@@ -66,7 +66,7 @@ public class GerenteMain {
         // setting up target
         CommunityTarget target = new CommunityTarget();
         target.setCommunity(new OctetString("public"));
-        target.setAddress(new UdpAddress("192.168.0.101/1610"));
+        target.setAddress(new UdpAddress("192.168.0.191/1610"));
         target.setRetries(2);
         target.setTimeout(1500);
         target.setVersion(SnmpConstants.version1);
