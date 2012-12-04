@@ -42,6 +42,12 @@ public class PhonePanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         ipLabel = new javax.swing.JLabel();
+        modelLabel = new javax.swing.JLabel();
+        versionLabel = new javax.swing.JLabel();
+        upTimeLabel = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(640, 360));
 
@@ -101,24 +107,50 @@ public class PhonePanel extends javax.swing.JPanel {
 
         ipLabel.setText("IP: ");
 
+        modelLabel.setText("Model:");
+
+        versionLabel.setText("Version:");
+
+        upTimeLabel.setText("Up time:");
+
+        jLabel4.setText("jLabel4");
+
+        jLabel5.setText("jLabel5");
+
+        jLabel6.setText("jLabel6");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(gpsLabel)
+                            .addGap(0, 0, 0)
+                            .addComponent(networkLabel)
+                            .addGap(0, 0, 0)
+                            .addComponent(bluetoothLabel)
+                            .addGap(0, 0, 0)
+                            .addComponent(batteryStatusLabel)
+                            .addGap(0, 0, 0)
+                            .addComponent(batteryLevelLabel))
+                        .addComponent(ipLabel)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(gpsLabel)
-                        .addGap(0, 0, 0)
-                        .addComponent(networkLabel)
-                        .addGap(0, 0, 0)
-                        .addComponent(bluetoothLabel)
-                        .addGap(0, 0, 0)
-                        .addComponent(batteryStatusLabel)
-                        .addGap(0, 0, 0)
-                        .addComponent(batteryLevelLabel))
-                    .addComponent(ipLabel)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(upTimeLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel6))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(modelLabel)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel4))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(versionLabel)
+                            .addGap(18, 18, 18)
+                            .addComponent(jLabel5))))
                 .addGap(280, 280, 280))
         );
         layout.setVerticalGroup(
@@ -130,31 +162,43 @@ public class PhonePanel extends javax.swing.JPanel {
                     .addComponent(bluetoothLabel)
                     .addComponent(batteryStatusLabel)
                     .addComponent(batteryLevelLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(modelLabel)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(versionLabel)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(upTimeLabel)
+                    .addComponent(jLabel6))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(ipLabel))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void gpsLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gpsLabelMouseClicked
-        device.gpsClicked();
+        device.updateGPSStatus();
     }//GEN-LAST:event_gpsLabelMouseClicked
 
     private void networkLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_networkLabelMouseClicked
-        device.networkClicked();
+        device.updateNetworkStatus();
     }//GEN-LAST:event_networkLabelMouseClicked
 
     private void bluetoothLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bluetoothLabelMouseClicked
-        device.bluetoothClicked();
+        device.updateBluetoothStatus();
     }//GEN-LAST:event_bluetoothLabelMouseClicked
 
     private void batteryStatusLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_batteryStatusLabelMouseClicked
-        device.batteryStatusClicked();
+        device.updateBatteryStatus();
     }//GEN-LAST:event_batteryStatusLabelMouseClicked
 
     private void batteryLevelLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_batteryLevelLabelMouseClicked
-        device.batteryLevelClicked();
+        device.updateBatteryLevel();
     }
     
     @Override
@@ -174,8 +218,14 @@ public class PhonePanel extends javax.swing.JPanel {
     private javax.swing.JLabel bluetoothLabel;
     private javax.swing.JLabel gpsLabel;
     private javax.swing.JLabel ipLabel;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel modelLabel;
     private javax.swing.JLabel networkLabel;
+    private javax.swing.JLabel upTimeLabel;
+    private javax.swing.JLabel versionLabel;
     // End of variables declaration//GEN-END:variables
 }

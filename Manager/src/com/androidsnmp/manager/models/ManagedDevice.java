@@ -59,24 +59,40 @@ public class ManagedDevice {
         return phonePanel;
     }
     
-    public void gpsClicked() {
+    public void updateGPSStatus() {
         snmpMessenger.sengGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,3,2}));
     }                                     
 
-    public void networkClicked() {                                          
+    public void updateNetworkStatus() {                                          
         System.out.println(ip + ": networkLabelMouseClicked");
     }                                         
 
-    public void bluetoothClicked() {                                            
+    public void updateBluetoothStatus() {                                            
         System.out.println(ip + ": bluetoothLabelMouseClicked");
     }                                           
 
-    public void batteryStatusClicked() {                                                
+    public void updateBatteryStatus() {                                                
         System.out.println(ip + ": batteryStatusLabelMouseClicked");
     }                                               
 
-    public void batteryLevelClicked() {                                               
+    public void updateBatteryLevel() {                                               
         System.out.println(ip + ": batteryLevelLabelMouseClicked");
+    }
+    
+    public void updateModelName() {
+        
+    }
+    
+    public void updateVersionName() {
+        
+    }
+    
+    public void updateUpTime() {
+        
+    }
+    
+    public void updateTableData() {
+        
     }
     
     public static boolean isIpValid(String ip) {
