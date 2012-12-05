@@ -226,6 +226,8 @@ public class AgentService extends Service implements CommandResponder {
     }
 
     private void sendResponse(Address address, PDU command) {
+
+        command.setType(PDU.RESPONSE);
         System.out.println(command.toString());
         // Specify receiver
         CommunityTarget target = new CommunityTarget();
