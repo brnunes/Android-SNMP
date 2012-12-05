@@ -9,11 +9,12 @@ IMPORTS
 
 ufrgs                OBJECT IDENTIFIER ::= { enterprises 12619 }
 android              OBJECT IDENTIFIER ::= { ufrgs 1 }
-services             OBJECT IDENTIFIER ::= { android 1 }
+system               OBJECT IDENTIFIER ::= { android 1 }
+services             OBJECT IDENTIFIER ::= { android 2 }
 
 -- The hardware status.
 
-hardware             OBJECT IDENTIFIER ::= { android 2 }
+hardware             OBJECT IDENTIFIER ::= { android 3 }
 
 srvcNumber  OBJECT-TYPE
 	SYNTAX     INTEGER
@@ -46,19 +47,21 @@ SrvcEntry ::= SEQUENCE {
 	srvcDescr
 		OCTET STRING,
 	srvcRunningTime
-		TimeTicks
+		TimeTicks,
+	srvcMemoryUsed
+		INTEGER
 }
 
 srvcIndex  OBJECT-TYPE
 	SYNTAX     INTEGER
 	ACCESS     read-write
 	STATUS     mandatory
-	DESCRIPTION 
+	DESCRIPTION
 		""
 	::= { srvcEntry 1 }
 
 srvcDescr  OBJECT-TYPE
-	SYNTAX     INTEGER
+	SYNTAX     OCTET STRING
 	ACCESS     read-write
 	STATUS     mandatory
 	DESCRIPTION 
@@ -83,7 +86,7 @@ srvcMemoryUsed  OBJECT-TYPE
 
 hwBatteryStatus  OBJECT-TYPE
 	SYNTAX     INTEGER (0|1)
-	ACCESS     read-write
+	ACCESS     read-only
 	STATUS     mandatory
 	DESCRIPTION 
 		"Battery charge level of the device:
@@ -92,6 +95,16 @@ hwBatteryStatus  OBJECT-TYPE
 		1 - ON"
 	DEFVAL  { 0 }
 	::= { hardware 1 }
+
+hwBatteryLevel  OBJECT-TYPE
+	SYNTAX     INTEGER (0|1)
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"Battery level of the device:
+		
+		0 - 100 %"
+	::= { hardware 2 }
 
 hwGPSStatus  OBJECT-TYPE
 	SYNTAX     INTEGER (0|1)
@@ -102,7 +115,7 @@ hwGPSStatus  OBJECT-TYPE
 		
 		0 - OFF
 		1 - ON"
-	::= { hardware 2 }
+	::= { hardware 3 }
 
 hwBluetoothStatus  OBJECT-TYPE
 	SYNTAX     INTEGER (0|1)
@@ -113,7 +126,7 @@ hwBluetoothStatus  OBJECT-TYPE
 		
 		0 - OFF
 		1 - ON"
-	::= { hardware 3 }
+	::= { hardware 4 }
 
 hwNetworkStatus  OBJECT-TYPE
 	SYNTAX     INTEGER (0|1)
@@ -124,7 +137,33 @@ hwNetworkStatus  OBJECT-TYPE
 		
 		0 - OFF
 		1 - ON"
-	::= { hardware 4 }
+	::= { hardware 5 }
+
+sysModelNumber  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"Device Model Number"
+	::= { system 1 }
+
+sysAndroidVersion  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"Device Android Version"
+	::= { system 2 }
+
+sysUpTime  OBJECT-TYPE
+	SYNTAX     TimeTicks
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"Device Up time since last charge"
+	::= { system 3 }
+
+
 END
 
 -- This MIB was created using NuDesign Team's Visual MIBuilder (Ver 4.9).
