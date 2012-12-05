@@ -6,17 +6,14 @@ import android.os.*;
 import android.util.Log;
 import com.snmp.agent.model.MIBtree;
 import org.snmp4j.*;
-import org.snmp4j.asn1.BERInputStream;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.*;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.TreeSet;
 
 public class AgentService extends Service implements CommandResponder {
 
@@ -34,10 +31,13 @@ public class AgentService extends Service implements CommandResponder {
     public static String lastRequestReceived = "";
 
     private Snmp snmp;
+    private static final String SNMP_PORT = "32150";
+
     private static ArrayList<Address> registeredManagers = null;
 
-    private MIBtree MIB_MAP;
+    //private MIBtree MIB_MAP;
     private Timer timer;
+
 
     /**
      * Handler of incoming messages from clients.
@@ -86,19 +86,6 @@ public class AgentService extends Service implements CommandResponder {
 
     @Override
     public void onCreate() {
-        /*MIB_MAP = new MIBtree();
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,2,2,1,1,4}), new Integer32(2)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,2,2,1,1,3}), new OctetString("BLALBAL3")));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,2,1,1,1}), new OctetString("BLALBAL1")));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,2,1,1,2}), new OctetString("BLALBAL2")));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,2,2,1,1,4}), new Integer32(1)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,2,2,1,1,4}), new Integer32(3)));
-        MIB_MAP.print();
-        System.out.println(MIB_MAP.get(new OID(new int[] {1,3,6,1,2,1,1,1,0})).toString());
-        MIB_MAP.set(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 1, 0}), new OctetString("BLALBAL23")));
-        System.out.println(MIB_MAP.get(new OID(new int[] {1,3,6,1,2,1,1,1,0})).toString());
-        System.out.println(MIB_MAP.getNext(new OID(new int[]{1, 3, 6, 2, 2, 1, 1, 3})).toString());
-        System.out.println(MIB_MAP.getNext(new OID(new int[] {1,3,6,1,2,1,1,2,0})).toString()); */
         initMIBWithDefault();
         timer = new Timer();
         timer.scheduleAtFixedRate(new RefreshMIBData(), 0, 50000);
@@ -106,7 +93,7 @@ public class AgentService extends Service implements CommandResponder {
     }
 
     private void initMIBWithDefault(){
-        MIB_MAP = MIBtree.getInstance();
+        MIBtree MIB_MAP = MIBtree.getInstance();
         MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,1,0}), new OctetString("Modelo x")));
         MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,1,0}), new OctetString("Modelo bla")));
         MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,2,0}), new OctetString("4.0")));
@@ -189,7 +176,7 @@ public class AgentService extends Service implements CommandResponder {
         private void initSnmp(){
             try {
                 TransportMapping transport = null;
-                transport = new DefaultUdpTransportMapping(new UdpAddress("0.0.0.0/1610"));
+                transport = new DefaultUdpTransportMapping(new UdpAddress("0.0.0.0/" + SNMP_PORT));
 
                 snmp = new Snmp(transport);
 
@@ -239,13 +226,15 @@ public class AgentService extends Service implements CommandResponder {
     }
 
     private void sendResponse(Address address, PDU command) {
+
+        command.setType(PDU.RESPONSE);
         System.out.println(command.toString());
         // Specify receiver
         CommunityTarget target = new CommunityTarget();
         target.setCommunity(new OctetString("public"));
         target.setVersion(SnmpConstants.version1);
         target.setAddress(address);
-        target.setRetries(2);
+        target.setRetries(0);
         target.setTimeout(1500);
 
         try {
@@ -264,6 +253,7 @@ public class AgentService extends Service implements CommandResponder {
     }
 
     private VariableBinding answerForGetNext(OID oid) {
+        MIBtree MIB_MAP = MIBtree.getInstance();
         VariableBinding vb = MIB_MAP.getNext(oid);
         return vb;
     }
@@ -278,6 +268,7 @@ public class AgentService extends Service implements CommandResponder {
     }
 
     private Variable answerForGet(OID oid) {
+        MIBtree MIB_MAP = MIBtree.getInstance();
         VariableBinding vb = MIB_MAP.get(oid);
         return vb.getVariable();
     }
