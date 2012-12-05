@@ -14,7 +14,9 @@ import org.snmp4j.smi.OID;
  */
 public class ManagedDevice {
     private String ip;
-    private String port = "1610";
+    private String port = "32150";
+    
+    
     private boolean gpsStatus;
     private boolean networkStatus;
     private boolean bluetoothStatus;
@@ -68,15 +70,15 @@ public class ManagedDevice {
         System.out.println(ip + ": networkLabelMouseClicked");
     }                                         
 
-    public void updateBluetoothStatus() {                                            
+    public void updateBluetoothStatus() {
         System.out.println(ip + ": bluetoothLabelMouseClicked");
-    }                                           
+    }
 
-    public void updateBatteryStatus() {                                                
+    public void updateBatteryStatus() {
         System.out.println(ip + ": batteryStatusLabelMouseClicked");
-    }                                               
+    }
 
-    public void updateBatteryLevel() {                                               
+    public void updateBatteryLevel() {
         System.out.println(ip + ": batteryLevelLabelMouseClicked");
     }
     

@@ -185,20 +185,40 @@ public class PhonePanel extends javax.swing.JPanel {
         device.updateGPSStatus();
     }//GEN-LAST:event_gpsLabelMouseClicked
 
+    public void setGPSStatus() {
+        
+    }
+    
     private void networkLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_networkLabelMouseClicked
         device.updateNetworkStatus();
     }//GEN-LAST:event_networkLabelMouseClicked
 
+    public void setNetworkStatus() {
+        
+    }
+    
     private void bluetoothLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bluetoothLabelMouseClicked
         device.updateBluetoothStatus();
     }//GEN-LAST:event_bluetoothLabelMouseClicked
 
+    public void setBluetoothStatus() {
+        
+    }
+    
     private void batteryStatusLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_batteryStatusLabelMouseClicked
         device.updateBatteryStatus();
     }//GEN-LAST:event_batteryStatusLabelMouseClicked
 
+    public void setBatteryStatus() {
+        
+    }
+    
     private void batteryLevelLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_batteryLevelLabelMouseClicked
         device.updateBatteryLevel();
+    }
+    
+    public void setBatteryLevel() {
+        
     }
     
     @Override
