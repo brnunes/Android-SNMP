@@ -14,6 +14,7 @@ import org.snmp4j.smi.OID;
  */
 public class ManagedDevice {
     private String ip;
+    private String port = "1610";
     private boolean gpsStatus;
     private boolean networkStatus;
     private boolean bluetoothStatus;
@@ -28,7 +29,7 @@ public class ManagedDevice {
         phonePanel = new PhonePanel(this);
         phonePanel.setIpLabel(ip);
         
-        snmpMessenger = new SNMPMessenger(ip, "1610");
+        snmpMessenger = new SNMPMessenger(ip, port);
     }
 
     public String getIp() {
@@ -60,7 +61,7 @@ public class ManagedDevice {
     }
     
     public void updateGPSStatus() {
-        snmpMessenger.sengGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,3,2}));
+        snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,3,2,0}));
     }                                     
 
     public void updateNetworkStatus() {                                          

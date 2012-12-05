@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import org.snmp4j.*;
 import org.snmp4j.event.*;
 import org.snmp4j.mp.SnmpConstants;
+import org.snmp4j.smi.Integer32;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.UdpAddress;
@@ -21,23 +22,48 @@ import org.snmp4j.transport.DefaultUdpTransportMapping;
  * @author brnunes
  */
 public class SNMPMessenger {
-
     private String ip;
     private String port;
+    
     private Snmp snmp;
     private ResponseListener listener;
     private CommandResponder trapPrinter;
+    private CommunityTarget target;
+    
+    private PDU currentPDU;
 
     public SNMPMessenger(String ip, String port) {
         this.ip = ip;
         this.port = port;
         
+        // setting up target
+        target = new CommunityTarget();
+        target.setCommunity(new OctetString("public"));
+        target.setAddress(new UdpAddress(ip + "/" + port));
+        target.setRetries(2);
+        target.setTimeout(1500);
+        target.setVersion(SnmpConstants.version1);
+        
+        trapPrinter = new CommandResponder() {
+            public synchronized void processPdu(CommandResponderEvent e) {
+                PDU command = e.getPDU();
+                if (command != null) {
+                    System.out.println("trapPrinter: " + command.toString());
+                    if(command.getRequestID().getValue() == currentPDU.getRequestID().getValue()) {
+                        snmp.cancel(currentPDU, listener);
+                    }
+                }
+            }
+        };
+        
         try {
             snmp = new Snmp(new DefaultUdpTransportMapping(new UdpAddress("0.0.0.0/" + port)));
+            snmp.addCommandResponder(trapPrinter);
+            snmp.listen();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         listener = new ResponseListener() {
             public void onResponse(ResponseEvent event) {
                 // Always cancel async request when response has been received
@@ -48,66 +74,45 @@ public class SNMPMessenger {
                 PDU response = event.getResponse();
                 PDU request = event.getRequest();
                 if (response == null) {
-                    System.out.println("Request " + request + " timed out");
+                    System.out.println("listener: Request " + request + " timed out");
                 } else {
-                    System.out.println("Received response " + response + " on request "
+                    System.out.println("listener: Received response " + response + " on request "
                             + request);
-                }
-            }
-        };
-
-        trapPrinter = new CommandResponder() {
-            public synchronized void processPdu(CommandResponderEvent e) {
-                PDU command = e.getPDU();
-                if (command != null) {
-                    System.out.println(command.toString());
                 }
             }
         };
     }
 
     public void sendGetNextRequest() {
-        // creating PDU
-        PDU pdu = new PDU();
-        pdu.add(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 1})));
-        pdu.add(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 2})));
-        pdu.setType(PDU.GETNEXT);
+        /*// creating PDU
+         PDU pdu = new PDU();
+         pdu.add(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 1})));
+         pdu.add(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 2})));
+         pdu.setType(PDU.GETNEXT);
 
-        // setting up target
-        CommunityTarget target = new CommunityTarget();
-        target.setCommunity(new OctetString("public"));
-        target.setAddress(new UdpAddress(ip + "/" + port));
-        target.setRetries(2);
-        target.setTimeout(1500);
-        target.setVersion(SnmpConstants.version1);
+         // setting up target
+         CommunityTarget target = new CommunityTarget();
+         target.setCommunity(new OctetString("public"));
+         target.setAddress(new UdpAddress(ip + "/" + port));
+         target.setRetries(2);
+         target.setTimeout(1500);
+         target.setVersion(SnmpConstants.version1);
 
-        try {
-            snmp.send(pdu, target, null, listener);
-            snmp.addCommandResponder(trapPrinter);
-            snmp.listen();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+         try {
+         snmp.send(pdu, target, null, listener);
+         } catch (IOException e) {
+         e.printStackTrace();
+         }*/
     }
-    
-    public void sengGetRequest(OID oid) {
-        // creating PDU
-        PDU pdu = new PDU();
-        pdu.add(new VariableBinding(oid));
-        pdu.setType(PDU.GET);
 
-        // setting up target
-        CommunityTarget target = new CommunityTarget();
-        target.setCommunity(new OctetString("public"));
-        target.setAddress(new UdpAddress(ip + "/" + port));
-        target.setRetries(2);
-        target.setTimeout(1500);
-        target.setVersion(SnmpConstants.version1);
+    public void sendGetRequest(OID oid) {
+        // creating PDU
+        currentPDU = new PDU();
+        currentPDU.add(new VariableBinding(oid));
+        currentPDU.setType(PDU.GET);
 
         try {
-            snmp.send(pdu, target, null, listener);
-            snmp.addCommandResponder(trapPrinter);
-            snmp.listen();
+            snmp.send(currentPDU, target, null, listener);
         } catch (IOException e) {
             e.printStackTrace();
         }
