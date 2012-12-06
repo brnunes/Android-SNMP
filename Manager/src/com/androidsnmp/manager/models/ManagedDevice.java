@@ -6,7 +6,9 @@ package com.androidsnmp.manager.models;
 
 import com.androidsnmp.manager.gui.PhonePanel;
 import com.androidsnmp.manager.main.SNMPMessenger;
+import java.util.Vector;
 import org.snmp4j.smi.OID;
+import org.snmp4j.smi.VariableBinding;
 
 /**
  *
@@ -31,7 +33,7 @@ public class ManagedDevice {
         phonePanel = new PhonePanel(this);
         phonePanel.setIpLabel(ip);
         
-        snmpMessenger = new SNMPMessenger(ip, port);
+        snmpMessenger = new SNMPMessenger(ip, port, this);
     }
 
     public String getIp() {
@@ -63,39 +65,78 @@ public class ManagedDevice {
     }
     
     public void updateGPSStatus() {
-        snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,3,2,0}));
+        snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,3,3,0}), new SNMPResponseListener() {
+
+            public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
+                phonePanel.setGpsLabelText(variableBinding.get(0).toValueString());
+            }
+        });
     }                                     
 
-    public void updateNetworkStatus() {                                          
-        System.out.println(ip + ": networkLabelMouseClicked");
+    public void updateNetworkStatus() {
+        snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,3,5,0}), new SNMPResponseListener() {
+
+            public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
+                phonePanel.setNetworkLabelText(variableBinding.get(0).toValueString());
+            }
+        });
     }                                         
 
     public void updateBluetoothStatus() {
-        System.out.println(ip + ": bluetoothLabelMouseClicked");
+        snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,3,4,0}), new SNMPResponseListener() {
+
+            public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
+                phonePanel.setBluetoothLabelText(variableBinding.get(0).toValueString());
+            }
+        });
     }
 
     public void updateBatteryStatus() {
-        System.out.println(ip + ": batteryStatusLabelMouseClicked");
+        snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,3,1,0}), new SNMPResponseListener() {
+
+            public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
+                phonePanel.setBatteryStatusLabelText(variableBinding.get(0).toValueString());
+            }
+        });
     }
 
     public void updateBatteryLevel() {
-        System.out.println(ip + ": batteryLevelLabelMouseClicked");
+        snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,3,2,0}), new SNMPResponseListener() {
+
+            public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
+                phonePanel.setBatteryLevelLabelText(variableBinding.get(0).toValueString());
+            }
+        });
     }
     
     public void updateModelName() {
-        
+        snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,1,1,0}), new SNMPResponseListener() {
+
+            public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
+                phonePanel.setModelValueLabelText(variableBinding.get(0).toValueString());
+            }
+        });
     }
     
     public void updateVersionName() {
-        
+        snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,1,2,0}), new SNMPResponseListener() {
+
+            public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
+                phonePanel.setVersionValueLabel(variableBinding.get(0).toValueString());
+            }
+        });
     }
     
     public void updateUpTime() {
-        
+        snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,1,3,0}), new SNMPResponseListener() {
+
+            public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
+                phonePanel.setUpTimeValueLabelText(variableBinding.get(0).toValueString());
+            }
+        });
     }
     
     public void updateTableData() {
-        
     }
     
     public static boolean isIpValid(String ip) {

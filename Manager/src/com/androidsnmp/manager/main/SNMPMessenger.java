@@ -4,6 +4,8 @@
  */
 package com.androidsnmp.manager.main;
 
+import com.androidsnmp.manager.models.ManagedDevice;
+import com.androidsnmp.manager.models.SNMPResponseListener;
 import org.snmp4j.*;
 import org.snmp4j.event.*;
 import org.snmp4j.mp.SnmpConstants;
@@ -24,10 +26,13 @@ public class SNMPMessenger {
     private String ip;
     private String port;
     private CommunityTarget comtarget;
+    
+    private ManagedDevice device;
 
-    public SNMPMessenger(String ip, String port) {
+    public SNMPMessenger(String ip, String port, ManagedDevice device) {
         this.ip = ip;
         this.port = port;
+        this.device = device;
 
         // Create Target Address object
         comtarget = new CommunityTarget();
@@ -62,7 +67,7 @@ public class SNMPMessenger {
          }*/
     }
 
-    public void sendGetRequest(OID oid) {
+    public void sendGetRequest(OID oid, final SNMPResponseListener responseListener) {
         try {
             // Create the PDU object
             PDU pdu = new PDU();
@@ -90,6 +95,7 @@ public class SNMPMessenger {
 
                         if (errorStatus == PDU.noError) {
                             System.out.println("Snmp Get Response = " + response.getVariableBindings());
+                            responseListener.onSNMPResponseReceived(response.getVariableBindings());
                         } else {
                             System.out.println("Error: Request Failed");
                             System.out.println("Error Status = " + errorStatus);
