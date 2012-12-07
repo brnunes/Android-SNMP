@@ -6,6 +6,7 @@ package com.androidsnmp.manager.main;
 
 import com.androidsnmp.manager.models.ManagedDevice;
 import com.androidsnmp.manager.models.SNMPResponseListener;
+import com.androidsnmp.manager.models.SNMPTableResponseListener;
 import org.snmp4j.*;
 import org.snmp4j.event.*;
 import org.snmp4j.mp.SnmpConstants;
@@ -14,6 +15,10 @@ import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.UdpAddress;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
+import org.snmp4j.util.DefaultPDUFactory;
+import org.snmp4j.util.TableEvent;
+import org.snmp4j.util.TableListener;
+import org.snmp4j.util.TableUtils;
 
 /**
  *
@@ -66,6 +71,54 @@ public class SNMPMessenger {
          e.printStackTrace();
          }*/
     }
+    
+    public void getTable(OID[] columns, final SNMPTableResponseListener responseListener) {
+        try {
+            // Create Snmp object for sending data to Agent
+            Snmp snmp = new Snmp(new DefaultUdpTransportMapping());
+            snmp.listen();
+
+            TableUtils tableUtils = new TableUtils(snmp, new DefaultPDUFactory(PDU.GETBULK));
+            
+            TableListener listener = new TableListener() {
+                private boolean finished = false;
+
+                public boolean next(TableEvent event) {
+                    System.out.println("OID: " + event.getIndex());
+                    System.out.println("Columns:");
+                    
+                    int numColumns = event.getColumns().length;
+                    
+                    String[] row = new String[numColumns];
+                    
+                    for(int i = 0; i < numColumns; i++) {
+                        System.out.println(i + ": " + event.getColumns()[i]);
+                        row[i] = event.getColumns()[i].toValueString();
+                        System.out.println("Row: " + row[i]);
+                    }
+                    
+                    responseListener.onRowReceived(row);
+                    
+                    return true;
+                }
+
+                public void finished(TableEvent event) {
+                    finished = true;
+                }
+
+                public boolean isFinished() {
+                    return finished;
+                }
+            };
+            
+            System.out.println("Starting to get table ...");
+            
+            tableUtils.getTable(comtarget, columns, listener, null, null, null);
+            
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void sendGetRequest(OID oid, final SNMPResponseListener responseListener) {
         try {
@@ -109,7 +162,9 @@ public class SNMPMessenger {
             };
             
             System.out.println("Sending Request to Agent...");
+            
             snmp.send(pdu, comtarget, "user_handle_object", listener);
+            
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }

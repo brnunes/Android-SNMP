@@ -137,6 +137,28 @@ public class ManagedDevice {
     }
     
     public void updateTableData() {
+        OID[] columns = new OID[]{new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,1}), 
+                                new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,2}),
+                                new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,3}),
+                                new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,4})};
+        
+        
+        snmpMessenger.getTable(columns, new SNMPTableResponseListener() {
+            boolean firstRow = true;
+
+            public void onRowReceived(Object[] row) {
+                if(firstRow) {
+                    phonePanel.clearTable();
+                    firstRow = false;
+                }
+                
+                phonePanel.addTableRow(row);
+            }
+
+            public void onTableReceived() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
     }
     
     public static boolean isIpValid(String ip) {

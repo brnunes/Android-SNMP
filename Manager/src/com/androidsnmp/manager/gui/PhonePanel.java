@@ -7,6 +7,7 @@ package com.androidsnmp.manager.gui;
 import com.androidsnmp.manager.models.ManagedDevice;
 import java.awt.LayoutManager;
 import javax.swing.JLabel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -15,14 +16,23 @@ import javax.swing.JLabel;
 public class PhonePanel extends javax.swing.JPanel {
     protected boolean mAllowLayoutChange;
     private ManagedDevice device;
+    private DefaultTableModel tableModel;
     
     /**
      * Creates new form PhonePanel
      */
     public PhonePanel(ManagedDevice device) {
         this.device = device;
+        
+        tableModel = new DefaultTableModel(
+            new Object [][] {},
+            new String [] {
+                "pid", "Description", "Running Time", "Memory Used"
+            });
+        
         mAllowLayoutChange=true;
         initComponents();
+        servicesTable.getColumnModel().getColumn(0).setPreferredWidth(25);
         mAllowLayoutChange=false;
     }
 
@@ -108,17 +118,7 @@ public class PhonePanel extends javax.swing.JPanel {
             }
         });
 
-        servicesTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        servicesTable.setModel(tableModel);
         servicesTable.setPreferredSize(new java.awt.Dimension(360, 200));
         servicesScrollPane.setViewportView(servicesTable);
 
@@ -218,7 +218,7 @@ public class PhonePanel extends javax.swing.JPanel {
                 .addComponent(servicesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(ipLabel))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -300,6 +300,16 @@ public class PhonePanel extends javax.swing.JPanel {
 
     public void setUpTimeValueLabelText(String text) {
         this.upTimeValueLabel.setText(text);
+    }
+    
+    public void clearTable() {
+        while(tableModel.getRowCount() > 0) {
+            tableModel.removeRow(0);
+        }
+    }
+    
+    public void addTableRow(Object[] row) {
+        tableModel.addRow(row);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
