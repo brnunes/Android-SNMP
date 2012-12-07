@@ -119,6 +119,7 @@ public class PhonePanel extends javax.swing.JPanel {
         });
 
         servicesTable.setModel(tableModel);
+        servicesTable.setFillsViewportHeight(true);
         servicesTable.setPreferredSize(new java.awt.Dimension(360, 200));
         servicesScrollPane.setViewportView(servicesTable);
 
@@ -173,7 +174,9 @@ public class PhonePanel extends javax.swing.JPanel {
                     .addComponent(batteryStatusLabel)
                     .addGap(0, 0, 0)
                     .addComponent(batteryLevelLabel))
-                .addComponent(ipLabel)
+                .addGroup(layout.createSequentialGroup()
+                    .addComponent(ipLabel)
+                    .addContainerGap())
                 .addComponent(servicesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -189,7 +192,6 @@ public class PhonePanel extends javax.swing.JPanel {
                     .addComponent(upTimeValueLabel)
                     .addComponent(modelValueLabel)))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jButton1)
                 .addContainerGap())
         );
@@ -202,7 +204,7 @@ public class PhonePanel extends javax.swing.JPanel {
                     .addComponent(bluetoothLabel)
                     .addComponent(batteryStatusLabel)
                     .addComponent(batteryLevelLabel))
-                .addGap(67, 67, 67)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(modelLabel)
                     .addComponent(modelValueLabel))
@@ -214,11 +216,11 @@ public class PhonePanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(upTimeLabel)
                     .addComponent(upTimeValueLabel))
-                .addGap(76, 76, 76)
-                .addComponent(servicesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
+                .addComponent(servicesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(ipLabel))
         );
     }// </editor-fold>//GEN-END:initComponents
