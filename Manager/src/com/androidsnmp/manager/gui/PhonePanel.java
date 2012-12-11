@@ -134,6 +134,11 @@ public class PhonePanel extends javax.swing.JPanel {
         });
 
         modelValueLabel.setText("Unknown");
+        modelValueLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                modelValueLabelMouseClicked(evt);
+            }
+        });
 
         versionLabel.setText("Version:");
         versionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -143,6 +148,11 @@ public class PhonePanel extends javax.swing.JPanel {
         });
 
         versionValueLabel.setText("Unknown");
+        versionValueLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                versionValueLabelMouseClicked(evt);
+            }
+        });
 
         upTimeLabel.setText("Up time:");
         upTimeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -152,6 +162,11 @@ public class PhonePanel extends javax.swing.JPanel {
         });
 
         upTimeValueLabel.setText("Unknown");
+        upTimeValueLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                upTimeValueLabelMouseClicked(evt);
+            }
+        });
 
         ipLabel.setText("IP: ");
 
@@ -272,6 +287,18 @@ public class PhonePanel extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         device.updateTableData();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void modelValueLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modelValueLabelMouseClicked
+        device.updateModelName();
+    }//GEN-LAST:event_modelValueLabelMouseClicked
+
+    private void versionValueLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_versionValueLabelMouseClicked
+        device.updateVersionName();
+    }//GEN-LAST:event_versionValueLabelMouseClicked
+
+    private void upTimeValueLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_upTimeValueLabelMouseClicked
+        device.updateUpTime();
+    }//GEN-LAST:event_upTimeValueLabelMouseClicked
 
     public void setIpLabel(String text) {
         ipLabel.setText("IP: " + text);
