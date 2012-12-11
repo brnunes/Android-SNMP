@@ -187,6 +187,15 @@ public class ManagedDevice {
         });
     }
     
+    public void sendMessage(String message) {
+        snmpMessenger.sendSetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,4,1}), message, new SNMPResponseListener() {
+
+            public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
+                System.out.println("-> " + variableBinding);
+            }
+        });
+    }
+    
     public static boolean isIpValid(String ip) {
         return ip.matches("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}");
     }
