@@ -201,6 +201,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Unknown"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="modelValueLabelMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="versionLabel">
       <Properties>
@@ -214,6 +217,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Unknown"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="versionValueLabelMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="upTimeLabel">
       <Properties>
@@ -227,6 +233,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Unknown"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="upTimeValueLabelMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="ipLabel">
       <Properties>
