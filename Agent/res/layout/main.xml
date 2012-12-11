@@ -33,22 +33,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dip"
-                android:text="@string/list_of_managers_label"/>
+                android:text="@string/list_of_messages_from_managers_label" />
+
         <ListView
                 android:id="@+id/list_of_registered_managers"
                 android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                />
+                android:layout_width="match_parent" />
 
-    <Button android:id="@+id/danger_alert_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/danger_alert_button" />
-
-
+        <Button android:id="@+id/danger_alert_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/danger_alert_button" />
 
     </LinearLayout>
+
     <ScrollView
 
         android:layout_width="match_parent"
@@ -60,8 +59,6 @@
             android:id="@+id/snmp_messages_history"
             android:orientation="vertical"
             />
-
-
 
     </ScrollView>
 

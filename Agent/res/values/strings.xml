@@ -26,4 +26,5 @@
     <string name="last_snmp_request">Last SNMP Request:</string>
     <string name="last_snmp_request_get">Last GET:</string>
     <string name="list_of_managers_label">Registered Managers</string>
+    <string name="list_of_messages_from_managers_label">Messages from Managers</string>
 </resources>

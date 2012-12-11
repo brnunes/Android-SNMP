@@ -27,6 +27,7 @@ public class AgentService extends Service implements CommandResponder {
     public static final int MSG_SET_VALUE = 3;
     public static final int MSG_SNMP_REQUEST_RECEIVED = 4;
     public static final int MSN_SEND_DANGER_TRAP = 5;
+    public static final int MSG_MANAGER_MESSAGE_RECEIVED = 6;
 
     public static String lastRequestReceived = "";
 
@@ -37,7 +38,6 @@ public class AgentService extends Service implements CommandResponder {
 
     //private MIBtree MIB_MAP;
     private Timer timer;
-
 
     /**
      * Handler of incoming messages from clients.
@@ -86,33 +86,9 @@ public class AgentService extends Service implements CommandResponder {
 
     @Override
     public void onCreate() {
-        initMIBWithDefault();
         timer = new Timer();
         timer.scheduleAtFixedRate(new RefreshMIBData(), 0, 50000);
         new AgentListener().start();
-    }
-
-    private void initMIBWithDefault(){
-        MIBtree MIB_MAP = MIBtree.getInstance();
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,1,0}), new OctetString("Modelo x")));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,1,0}), new OctetString("Modelo bla")));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,2,0}), new OctetString("4.0")));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,1,3,0}), new TimeTicks(100000)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,1,0}), new Integer32(2)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,1,1}), new Integer32(1)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,1,2}), new Integer32(2)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,2,1}), new OctetString("BALBA")));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,2,2}), new OctetString("BALBA2")));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,3,1}), new TimeTicks(98361456)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,3,2}), new TimeTicks(234452652)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,4,1}), new Integer32(4568)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,4,2}), new Integer32(6456)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,1,0}), new Integer32(1)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,2,0}), new Integer32(100)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,3,0}), new Integer32(0)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,4,0}), new Integer32(0)));
-        MIB_MAP.addNode(new VariableBinding(new OID(new int[] {1,3,6,1,4,1,12619,1,3,5,0}), new Integer32(1)));
-        MIB_MAP.print();
     }
 
     @Override
@@ -219,9 +195,27 @@ public class AgentService extends Service implements CommandResponder {
                 handleGetRequest(command);
             } else if(command.getType() == PDU.GETNEXT){
                 handleGetNextRequest(command);
+            } else if (command.getType() == PDU.SET) {
+                handleSetRequest(command);
             }
             Address address = commandResponderEvent.getPeerAddress();
             sendResponse(address, command);
+        }
+    }
+
+    private void handleSetRequest(PDU command) {
+        VariableBinding varBind;
+        OID oid;
+        for(int i = 0; i < command.size(); i++){
+            varBind = command.get(i);
+            oid = (OID)MIBtree.MNG_MANAGER_MESSAGE_OID.clone();
+            oid.append(0);
+            if(varBind.getOid().equals(oid)) {
+
+                MIBtree MIB_MAP = MIBtree.getInstance();
+                MIB_MAP.set(varBind);
+                sendMessageToClients(MSG_MANAGER_MESSAGE_RECEIVED);
+            }
         }
     }
 

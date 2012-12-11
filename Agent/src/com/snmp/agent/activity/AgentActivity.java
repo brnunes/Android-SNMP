@@ -1,6 +1,5 @@
 package com.snmp.agent.activity;
 
-import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -13,9 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import com.snmp.actionbarcompat.ActionBarActivity;
+import com.snmp.agent.model.MIBtree;
 import com.snmp.agent.service.AgentService;
 import com.snmp.agent.R;
-import org.snmp4j.smi.Address;
 
 import java.util.ArrayList;
 
@@ -28,7 +27,7 @@ public class AgentActivity extends ActionBarActivity implements View.OnClickList
 
     private LinearLayout messagesReceivedScrollView;
     private ListView registeredManagersList;
-    private ArrayAdapter<Address> registeredManagersAdapter;
+    private ArrayAdapter<String> messagesReceivedAdapter;
     private Button dangerButton;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -37,9 +36,9 @@ public class AgentActivity extends ActionBarActivity implements View.OnClickList
 
         messagesReceivedScrollView = (LinearLayout) findViewById(R.id.snmp_messages_history);
 
-        registeredManagersAdapter = new ArrayAdapter<Address>(this, android.R.layout.simple_list_item_1, new ArrayList<Address>());
+        messagesReceivedAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
         registeredManagersList = (ListView) findViewById(R.id.list_of_registered_managers);
-        registeredManagersList.setAdapter(registeredManagersAdapter);
+        registeredManagersList.setAdapter(messagesReceivedAdapter);
         dangerButton = (Button) findViewById(R.id.danger_alert_button);
         dangerButton.setOnClickListener(this);
 
@@ -95,14 +94,21 @@ public class AgentActivity extends ActionBarActivity implements View.OnClickList
             switch (msg.what) {
                 case AgentService.MSG_SET_VALUE:
                     break;
+
                 case AgentService.MSG_SNMP_REQUEST_RECEIVED:
                     TextView aux = new TextView(AgentActivity.this);
                     aux.setText(AgentService.lastRequestReceived);
                     messagesReceivedScrollView.addView(aux);
-                    registeredManagersAdapter = new ArrayAdapter<Address>(AgentActivity.this,
-                            android.R.layout.simple_list_item_1, AgentService.getRegisteredManagers());
-                    //registeredManagersAdapter.addAll(AgentService.getRegisteredManagers());
-                    registeredManagersList.setAdapter(registeredManagersAdapter);
+
+                    break;
+
+                case AgentService.MSG_MANAGER_MESSAGE_RECEIVED:
+                    MIBtree miBtree = MIBtree.getInstance();
+                    String message = miBtree.getNext(MIBtree.MNG_MANAGER_MESSAGE_OID).getVariable().toString();
+                    messagesReceivedAdapter.add(message);
+                    messagesReceivedAdapter.notifyDataSetChanged();
+                    break;
+
                 default:
                     super.handleMessage(msg);
             }

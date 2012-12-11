@@ -23,6 +23,8 @@ public class MIBtree {
     public static final OID HW_GPS_STATUS_OID = new OID(new int[] {1,3,6,1,4,1,12619,1,3,3});
     public static final OID HW_BLUETOOTH_STATUS_OID = new OID(new int[] {1,3,6,1,4,1,12619,1,3,4});
     public static final OID HW_NETWOK_STATUS_OID = new OID(new int[] {1,3,6,1,4,1,12619,1,3,5});
+    public static final OID HW_CAMERA_STATUS_OID = new OID(new int[] {1,3,6,1,4,1,12619,1,3,6});
+    public static final OID MNG_MANAGER_MESSAGE_OID = new OID(new int[] {1,3,6,1,4,1,12619,1,4,1});
 
     private static MIBtree uniqInstance;
 
