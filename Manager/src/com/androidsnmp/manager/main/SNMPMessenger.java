@@ -4,9 +4,11 @@
  */
 package com.androidsnmp.manager.main;
 
+import com.androidsnmp.manager.gui.ManagerFrame;
 import com.androidsnmp.manager.models.ManagedDevice;
 import com.androidsnmp.manager.models.SNMPResponseListener;
 import com.androidsnmp.manager.models.SNMPTableResponseListener;
+import java.util.Vector;
 import org.snmp4j.*;
 import org.snmp4j.event.*;
 import org.snmp4j.mp.SnmpConstants;
@@ -31,14 +33,11 @@ public class SNMPMessenger {
     private String ip;
     private String port;
     private CommunityTarget comtarget;
-    
-    private ManagedDevice device;
 
-    public SNMPMessenger(String ip, String port, ManagedDevice device) {
+    public SNMPMessenger(String ip, String port) {
         this.ip = ip;
         this.port = port;
-        this.device = device;
-
+        
         // Create Target Address object
         comtarget = new CommunityTarget();
         comtarget.setCommunity(new OctetString(community));
@@ -46,30 +45,6 @@ public class SNMPMessenger {
         comtarget.setAddress(new UdpAddress(ip + "/" + port));
         comtarget.setRetries(2);
         comtarget.setTimeout(1000);
-    }
-
-    public void sendGetNextRequest() {
-        /*// creating PDU
-         PDU pdu = new PDU();
-         pdu.add(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 1})));
-         pdu.add(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 2})));
-         pdu.setType(PDU.GETNEXT);
-
-         // setting up target
-         CommunityTarget target = new CommunityTarget();
-         target.setCommunity(new OctetString("public"));
-         target.setAddress(new UdpAddress(ip + "/" + port));
-         target.setRetries(2);
-         target.setTimeout(1500);
-         target.setVersion(SnmpConstants.version1);
-
-         try {
-         snmp.send(pdu, target, null, listener);
-         snmp.addCommandResponder(trapPrinter);
-         snmp.listen();
-         } catch (IOException e) {
-         e.printStackTrace();
-         }*/
     }
     
     public void getTable(OID[] columns, final SNMPTableResponseListener responseListener) {
@@ -141,7 +116,7 @@ public class SNMPMessenger {
                     PDU response = event.getResponse();
                     PDU request = event.getRequest();
                     if (response != null) {
-                        System.out.println("Got Response from Agent");
+                        System.out.println("Got Response from Agent: " + response.toString());
                         int errorStatus = response.getErrorStatus();
                         int errorIndex = response.getErrorIndex();
                         String errorStatusText = response.getErrorStatusText();
@@ -167,6 +142,30 @@ public class SNMPMessenger {
             
         } catch (java.io.IOException e) {
             e.printStackTrace();
+        }
+    }
+    
+    public void setIP(String ip) {
+        this.ip = ip;
+        comtarget.setAddress(new UdpAddress(ip + "/" + port));
+    }
+    
+    public static void discoverDevices(int[] begin, int[] end, final ManagerFrame frame) {
+        int[] current = begin.clone();
+        SNMPMessenger messenger = new SNMPMessenger(current[0] + "." + current[1] + "." + current[2] + "." + current[3],
+                ManagedDevice.port);
+        
+        for(int i = begin[3]; i <= end[3]; i++) {
+            current[3] = i;
+            final String currentIP = current[0] + "." + current[1] + "." + current[2] + "." + current[3];
+            
+            messenger.setIP(current[0] + "." + current[1] + "." + current[2] + "." + current[3]);
+            
+            messenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,1,1,0}), new SNMPResponseListener() {
+                public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
+                    frame.addDevice(currentIP).setModelName(variableBinding.get(0).toValueString());
+                }
+            });
         }
     }
 }

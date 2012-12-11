@@ -25,11 +25,9 @@ public class ManagedDeviceCellRenderer extends JLabel implements ListCellRendere
         ManagedDevice device = (ManagedDevice) value;
         setText(device.getIp());
         if(isSelected) {
-            System.out.println("selected");
-            setBackground(Color.blue);
+            setBackground(Color.LIGHT_GRAY);
         }
         else {
-            System.out.println("not selected");
             setBackground(null);
         }
         return this;

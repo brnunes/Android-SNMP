@@ -35,11 +35,8 @@ public class AndroidSNMPManager {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 managerFrame = new ManagerFrame(androidSNMPManager);
-                managerFrame.setLocation(100,100);
+                managerFrame.setLocationRelativeTo(null);
                 managerFrame.setVisible(true);
-                
-                androidSNMPManager.addManagedDevice(new ManagedDevice("192.168.0.191"));
-                androidSNMPManager.addManagedDevice(new ManagedDevice("192.168.0.188"));
             }
         });
     }

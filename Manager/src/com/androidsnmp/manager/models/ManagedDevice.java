@@ -16,14 +16,20 @@ import org.snmp4j.smi.VariableBinding;
  */
 public class ManagedDevice {
     private String ip;
-    private String port = "32150";
+    public static String port = "32150";
     
     
-    private boolean gpsStatus;
-    private boolean networkStatus;
-    private boolean bluetoothStatus;
-    private boolean batteryStatus;
-    private int batteryLevel;
+    private String gpsStatus;
+    private String networkStatus;
+    private String bluetoothStatus;
+    private String batteryStatus;
+    private String batteryLevel;
+    private String modelName;
+    private String versionName;
+    private String upTime;
+    
+    
+    
     private PhonePanel phonePanel;
     private SNMPMessenger snmpMessenger;
     
@@ -33,42 +39,62 @@ public class ManagedDevice {
         phonePanel = new PhonePanel(this);
         phonePanel.setIpLabel(ip);
         
-        snmpMessenger = new SNMPMessenger(ip, port, this);
+        snmpMessenger = new SNMPMessenger(ip, port);
     }
 
     public String getIp() {
         return ip;
     }
 
-    public boolean isGpsStatus() {
-        return gpsStatus;
-    }
-
-    public boolean isNetworkStatus() {
-        return networkStatus;
-    }
-
-    public boolean isBluetoothStatus() {
-        return bluetoothStatus;
-    }
-
-    public boolean isBatteryStatus() {
-        return batteryStatus;
-    }
-
-    public int getBatteryLevel() {
-        return batteryLevel;
-    }
-
     public PhonePanel getPhonePanel() {
         return phonePanel;
+    }
+
+    public void setGpsStatus(String gpsStatus) {
+        this.gpsStatus = gpsStatus;
+        phonePanel.setGpsLabelText(gpsStatus);
+    }
+
+    public void setNetworkStatus(String networkStatus) {
+        this.networkStatus = networkStatus;
+        phonePanel.setNetworkLabelText(networkStatus);
+    }
+
+    public void setBluetoothStatus(String bluetoothStatus) {
+        this.bluetoothStatus = bluetoothStatus;
+        phonePanel.setBluetoothLabelText(bluetoothStatus);
+    }
+
+    public void setBatteryStatus(String batteryStatus) {
+        this.batteryStatus = batteryStatus;
+         phonePanel.setBatteryStatusLabelText(batteryStatus);
+    }
+
+    public void setBatteryLevel(String batteryLevel) {
+        this.batteryLevel = batteryLevel;
+        phonePanel.setBatteryLevelLabelText(batteryLevel);
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+        phonePanel.setModelValueLabelText(modelName);
+    }
+
+    public void setVersionName(String versionName) {
+        this.versionName = versionName;
+        phonePanel.setVersionValueLabel(versionName);
+    }
+
+    public void setUpTime(String upTime) {
+        this.upTime = upTime;
+        phonePanel.setUpTimeValueLabelText(upTime);
     }
     
     public void updateGPSStatus() {
         snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,3,3,0}), new SNMPResponseListener() {
 
             public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
-                phonePanel.setGpsLabelText(variableBinding.get(0).toValueString());
+                setGpsStatus(variableBinding.get(0).toValueString().equalsIgnoreCase("1")? "ON" : "OFF");
             }
         });
     }                                     
@@ -77,7 +103,7 @@ public class ManagedDevice {
         snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,3,5,0}), new SNMPResponseListener() {
 
             public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
-                phonePanel.setNetworkLabelText(variableBinding.get(0).toValueString());
+                setNetworkStatus(variableBinding.get(0).toValueString().equalsIgnoreCase("1")? "ON" : "OFF");
             }
         });
     }                                         
@@ -86,7 +112,7 @@ public class ManagedDevice {
         snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,3,4,0}), new SNMPResponseListener() {
 
             public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
-                phonePanel.setBluetoothLabelText(variableBinding.get(0).toValueString());
+                setBluetoothStatus(variableBinding.get(0).toValueString().equalsIgnoreCase("1")? "ON" : "OFF");
             }
         });
     }
@@ -95,7 +121,7 @@ public class ManagedDevice {
         snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,3,1,0}), new SNMPResponseListener() {
 
             public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
-                phonePanel.setBatteryStatusLabelText(variableBinding.get(0).toValueString());
+               setBatteryStatus(variableBinding.get(0).toValueString().equalsIgnoreCase("1")? "Charging" : "Discharging");
             }
         });
     }
@@ -104,7 +130,7 @@ public class ManagedDevice {
         snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,3,2,0}), new SNMPResponseListener() {
 
             public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
-                phonePanel.setBatteryLevelLabelText(variableBinding.get(0).toValueString());
+                setBatteryLevel(variableBinding.get(0).toValueString() + "%");
             }
         });
     }
@@ -113,7 +139,7 @@ public class ManagedDevice {
         snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,1,1,0}), new SNMPResponseListener() {
 
             public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
-                phonePanel.setModelValueLabelText(variableBinding.get(0).toValueString());
+                setModelName(variableBinding.get(0).toValueString());
             }
         });
     }
@@ -122,7 +148,7 @@ public class ManagedDevice {
         snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,1,2,0}), new SNMPResponseListener() {
 
             public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
-                phonePanel.setVersionValueLabel(variableBinding.get(0).toValueString());
+                setVersionName(variableBinding.get(0).toValueString());
             }
         });
     }
@@ -131,7 +157,7 @@ public class ManagedDevice {
         snmpMessenger.sendGetRequest(new OID(new int[] {1,3,6,1,4,1,12619,1,1,3,0}), new SNMPResponseListener() {
 
             public void onSNMPResponseReceived(Vector<? extends VariableBinding> variableBinding) {
-                phonePanel.setUpTimeValueLabelText(variableBinding.get(0).toValueString());
+                setUpTime(variableBinding.get(0).toValueString());
             }
         });
     }

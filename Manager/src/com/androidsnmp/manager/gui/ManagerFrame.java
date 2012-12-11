@@ -5,10 +5,14 @@
 package com.androidsnmp.manager.gui;
 
 import com.androidsnmp.manager.main.AndroidSNMPManager;
+import com.androidsnmp.manager.main.SNMPMessenger;
 import com.androidsnmp.manager.models.ManagedDevice;
 import java.awt.CardLayout;
+import javax.swing.Box;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  *
@@ -50,6 +54,10 @@ public class ManagerFrame extends javax.swing.JFrame {
         addDeviceButton = new javax.swing.JButton();
         editDeviceButton = new javax.swing.JButton();
         removeDeviceButton = new javax.swing.JButton();
+        RangeLabel = new javax.swing.JLabel();
+        rangeBeginTextField = new javax.swing.JTextField();
+        rangeEndTextField = new javax.swing.JTextField();
+        discoverButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Android SNMP Manager");
@@ -87,22 +95,56 @@ public class ManagerFrame extends javax.swing.JFrame {
             }
         });
 
+        RangeLabel.setText("Enter range of IPs to discover:");
+
+        rangeBeginTextField.setText("192.168.0.185");
+        rangeBeginTextField.setToolTipText("Enter the begin of the range");
+        rangeBeginTextField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        rangeBeginTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                rangeBeginTextFieldFocusGained(evt);
+            }
+        });
+
+        rangeEndTextField.setText("192.168.0.255");
+        rangeEndTextField.setToolTipText("Enter the end of the range");
+        rangeEndTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                rangeEndTextFieldFocusGained(evt);
+            }
+        });
+
+        discoverButton.setText("Discover");
+        discoverButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                discoverButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(devicesListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(rangeBeginTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(rangeEndTextField))
+                        .addGap(18, 18, 18)
+                        .addComponent(discoverButton))
+                    .addComponent(RangeLabel)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(addDeviceButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editDeviceButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removeDeviceButton)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
-                .addComponent(dummyPhonePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(removeDeviceButton))
+                    .addComponent(devicesListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(dummyPhonePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -110,14 +152,24 @@ public class ManagerFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dummyPhonePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(devicesListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 605, Short.MAX_VALUE)
+                        .addComponent(dummyPhonePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 640, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 3, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(devicesListScrollPane)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(addDeviceButton)
                             .addComponent(removeDeviceButton)
-                            .addComponent(editDeviceButton))))
+                            .addComponent(editDeviceButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(RangeLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rangeBeginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(discoverButton)
+                            .addComponent(rangeEndTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
 
@@ -136,8 +188,7 @@ public class ManagerFrame extends javax.swing.JFrame {
                     if (androidSMNPManager.hasDevice(ip)) {
                         JOptionPane.showMessageDialog(this, "There is already one device with this IP!");
                     } else {
-                        ManagedDevice device = new ManagedDevice(ip);
-                        androidSMNPManager.addManagedDevice(device);
+                        addDevice(ip);
                         break;
                     }
                 } else {
@@ -193,6 +244,51 @@ public class ManagerFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_removeDeviceButtonActionPerformed
 
+    private void discoverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discoverButtonActionPerformed
+        if(ManagedDevice.isIpValid(rangeBeginTextField.getText())) {
+            if(ManagedDevice.isIpValid(rangeEndTextField.getText())) {
+                int[] begin = new int[4];
+                int[] end = new int[4];
+
+                String[] result = rangeBeginTextField.getText().split("\\.");
+                for(int i = 0; i < 4; i++) {
+                    begin[i] = Integer.parseInt(result[i]);
+                }
+
+                result = rangeEndTextField.getText().split("\\.");
+                for(int i = 0; i < 4; i++) {
+                    end[i] = Integer.parseInt(result[i]);
+                }
+                
+                if(begin[0] != end[0] || begin[1] != end[1] || begin[2] != end[2]) {
+                    JOptionPane.showMessageDialog(this, "Range too big!");
+                    rangeEndTextField.requestFocus();
+                } else {
+                    if(begin[3] > end[3]) {
+                        int temp = begin[3];
+                        begin[3] = end[3];
+                        end[3] = temp;
+                    }
+                    SNMPMessenger.discoverDevices(begin, end, this);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid IP address!");
+                rangeEndTextField.requestFocus();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid IP address!");
+            rangeBeginTextField.requestFocus();
+        }
+    }//GEN-LAST:event_discoverButtonActionPerformed
+
+    private void rangeBeginTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rangeBeginTextFieldFocusGained
+        rangeBeginTextField.selectAll();
+    }//GEN-LAST:event_rangeBeginTextFieldFocusGained
+
+    private void rangeEndTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rangeEndTextFieldFocusGained
+        rangeEndTextField.selectAll();
+    }//GEN-LAST:event_rangeEndTextFieldFocusGained
+
     public void addPhonePanel(ManagedDevice device, Object constraints) {
         dummyPhonePanel.add(device.getPhonePanel(), constraints);
         devicesList.setSelectedValue(device, true);
@@ -202,12 +298,26 @@ public class ManagerFrame extends javax.swing.JFrame {
         dummyPhonePanel.remove(phonePanel);
     }
     
+    public ManagedDevice addDevice(String ip) {
+        if(!androidSMNPManager.hasDevice(ip)) {
+            ManagedDevice device = new ManagedDevice(ip);
+            androidSMNPManager.addManagedDevice(device);
+            return device;
+        }
+        
+        return null;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel RangeLabel;
     private javax.swing.JButton addDeviceButton;
     private javax.swing.JList devicesList;
     private javax.swing.JScrollPane devicesListScrollPane;
+    private javax.swing.JButton discoverButton;
     private javax.swing.JPanel dummyPhonePanel;
     private javax.swing.JButton editDeviceButton;
+    private javax.swing.JTextField rangeBeginTextField;
+    private javax.swing.JTextField rangeEndTextField;
     private javax.swing.JButton removeDeviceButton;
     // End of variables declaration//GEN-END:variables
 }

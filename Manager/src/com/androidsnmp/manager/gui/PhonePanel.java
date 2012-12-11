@@ -6,7 +6,6 @@ package com.androidsnmp.manager.gui;
 
 import com.androidsnmp.manager.models.ManagedDevice;
 import java.awt.LayoutManager;
-import javax.swing.JLabel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -74,7 +73,7 @@ public class PhonePanel extends javax.swing.JPanel {
             }
         });
 
-        networkLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/res/gps_icon.png"))); // NOI18N
+        networkLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/res/wireless_icon.png"))); // NOI18N
         networkLabel.setText("Unknown");
         networkLabel.setToolTipText("Get Network Status");
         networkLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -120,7 +119,6 @@ public class PhonePanel extends javax.swing.JPanel {
 
         servicesTable.setModel(tableModel);
         servicesTable.setFillsViewportHeight(true);
-        servicesTable.setPreferredSize(new java.awt.Dimension(360, 200));
         servicesScrollPane.setViewportView(servicesTable);
 
         modelLabel.setText("Model:");
@@ -163,36 +161,38 @@ public class PhonePanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(gpsLabel)
-                    .addGap(0, 0, 0)
-                    .addComponent(networkLabel)
-                    .addGap(0, 0, 0)
-                    .addComponent(bluetoothLabel)
-                    .addGap(0, 0, 0)
-                    .addComponent(batteryStatusLabel)
-                    .addGap(0, 0, 0)
-                    .addComponent(batteryLevelLabel))
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(ipLabel)
-                    .addContainerGap())
-                .addComponent(servicesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(upTimeLabel)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(modelLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(upTimeLabel)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(modelLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(versionLabel)
+                                    .addGap(1, 1, 1))))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(versionValueLabel)
+                            .addComponent(upTimeValueLabel)
+                            .addComponent(modelValueLabel)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(versionLabel)
-                            .addGap(1, 1, 1))))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(versionValueLabel)
-                    .addComponent(upTimeValueLabel)
-                    .addComponent(modelValueLabel)))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jButton1)
+                            .addComponent(gpsLabel)
+                            .addGap(0, 0, 0)
+                            .addComponent(networkLabel)
+                            .addGap(0, 0, 0)
+                            .addComponent(bluetoothLabel)
+                            .addGap(0, 0, 0)
+                            .addComponent(batteryStatusLabel)
+                            .addGap(0, 0, 0)
+                            .addComponent(batteryLevelLabel))
+                        .addComponent(ipLabel)
+                        .addComponent(servicesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(227, 227, 227)
+                        .addComponent(jButton1)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -217,10 +217,10 @@ public class PhonePanel extends javax.swing.JPanel {
                     .addComponent(upTimeLabel)
                     .addComponent(upTimeValueLabel))
                 .addGap(18, 18, 18)
-                .addComponent(servicesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(servicesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addGap(3, 3, 3)
                 .addComponent(ipLabel))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -312,6 +312,7 @@ public class PhonePanel extends javax.swing.JPanel {
     
     public void addTableRow(Object[] row) {
         tableModel.addRow(row);
+        servicesScrollPane.invalidate();
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

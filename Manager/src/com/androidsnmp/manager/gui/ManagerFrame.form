@@ -26,19 +26,29 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="devicesListScrollPane" min="-2" pref="330" max="-2" attributes="0"/>
-                  <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="rangeBeginTextField" alignment="0" max="32767" attributes="0"/>
+                          <Component id="rangeEndTextField" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="discoverButton" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="RangeLabel" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="addDeviceButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="editDeviceButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="removeDeviceButton" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="devicesListScrollPane" alignment="0" min="-2" pref="330" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="14" max="32767" attributes="0"/>
-              <Component id="dummyPhonePanel" min="-2" pref="362" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="dummyPhonePanel" min="-2" pref="360" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -47,14 +57,26 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="dummyPhonePanel" pref="640" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Component id="devicesListScrollPane" pref="605" max="32767" attributes="0"/>
+                      <Component id="dummyPhonePanel" min="-2" pref="640" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="3" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="devicesListScrollPane" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="addDeviceButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="removeDeviceButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="editDeviceButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="RangeLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="rangeBeginTextField" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="discoverButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="rangeEndTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -124,6 +146,40 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeDeviceButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="RangeLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Enter range of IPs to discover:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="rangeBeginTextField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="192.168.0.185"/>
+        <Property name="toolTipText" type="java.lang.String" value="Enter the begin of the range"/>
+        <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+          <Color id="Text Cursor"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="rangeBeginTextFieldFocusGained"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="rangeEndTextField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="192.168.0.255"/>
+        <Property name="toolTipText" type="java.lang.String" value="Enter the end of the range"/>
+      </Properties>
+      <Events>
+        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="rangeEndTextFieldFocusGained"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="discoverButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Discover"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="discoverButtonActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
