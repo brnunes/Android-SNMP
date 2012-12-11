@@ -6,6 +6,7 @@ package com.androidsnmp.manager.gui;
 
 import com.androidsnmp.manager.models.ManagedDevice;
 import java.awt.LayoutManager;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -31,7 +32,11 @@ public class PhonePanel extends javax.swing.JPanel {
         
         mAllowLayoutChange=true;
         initComponents();
-        servicesTable.getColumnModel().getColumn(0).setPreferredWidth(25);
+        servicesTable.getColumnModel().getColumn(0).setPreferredWidth(54);
+        servicesTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+        servicesTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+        servicesTable.getColumnModel().getColumn(3).setPreferredWidth(100);
+        servicesTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         mAllowLayoutChange=false;
     }
 
