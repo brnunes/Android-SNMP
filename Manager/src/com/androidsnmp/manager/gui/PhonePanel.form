@@ -61,7 +61,7 @@
                           </Group>
                           <Component id="jButton1" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="268" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="messageTextField" max="32767" attributes="0"/>
@@ -99,7 +99,7 @@
                   <Component id="upTimeValueLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="servicesScrollPane" pref="349" max="32767" attributes="0"/>
+              <Component id="servicesScrollPane" pref="69" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -159,7 +159,7 @@
     <Component class="javax.swing.JLabel" name="batteryStatusLabel">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/com/androidsnmp/manager/gui/res/gps_icon.png"/>
+          <Image iconType="3" name="/com/androidsnmp/manager/gui/res/battery_status_icon.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Unknown"/>
         <Property name="toolTipText" type="java.lang.String" value="Get Battery Status"/>
@@ -173,7 +173,7 @@
     <Component class="javax.swing.JLabel" name="batteryLevelLabel">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/com/androidsnmp/manager/gui/res/gps_icon.png"/>
+          <Image iconType="3" name="/com/androidsnmp/manager/gui/res/battery_level_icon.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Unknown"/>
         <Property name="toolTipText" type="java.lang.String" value="Get Battery Level"/>

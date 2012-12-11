@@ -102,7 +102,7 @@ public class PhonePanel extends javax.swing.JPanel {
             }
         });
 
-        batteryStatusLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/res/gps_icon.png"))); // NOI18N
+        batteryStatusLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/res/battery_status_icon.png"))); // NOI18N
         batteryStatusLabel.setText("Unknown");
         batteryStatusLabel.setToolTipText("Get Battery Status");
         batteryStatusLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -113,7 +113,7 @@ public class PhonePanel extends javax.swing.JPanel {
             }
         });
 
-        batteryLevelLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/res/gps_icon.png"))); // NOI18N
+        batteryLevelLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/res/battery_level_icon.png"))); // NOI18N
         batteryLevelLabel.setText("Unknown");
         batteryLevelLabel.setToolTipText("Get Battery Level");
         batteryLevelLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -230,7 +230,7 @@ public class PhonePanel extends javax.swing.JPanel {
                                 .addComponent(ipLabel)
                                 .addComponent(servicesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                             .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 268, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(messageTextField)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -259,7 +259,7 @@ public class PhonePanel extends javax.swing.JPanel {
                     .addComponent(upTimeLabel)
                     .addComponent(upTimeValueLabel))
                 .addGap(18, 18, 18)
-                .addComponent(servicesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                .addComponent(servicesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
