@@ -15,6 +15,7 @@ services             OBJECT IDENTIFIER ::= { android 2 }
 -- The hardware status.
 
 hardware             OBJECT IDENTIFIER ::= { android 3 }
+manager             OBJECT IDENTIFIER ::= { android 4 }
 
 srvcNumber  OBJECT-TYPE
 	SYNTAX     INTEGER
@@ -26,7 +27,7 @@ srvcNumber  OBJECT-TYPE
 
 srvcTable  OBJECT-TYPE
 	SYNTAX SEQUENCE OF SrvcEntry
-	ACCESS     not-accessible
+	ACCESS     read-only
 	STATUS     mandatory
 	DESCRIPTION 
 		"A list of the services currently running on device. The number of entries is given by the value of srvcNumber."
@@ -34,7 +35,7 @@ srvcTable  OBJECT-TYPE
 
 srvcEntry  OBJECT-TYPE
 	SYNTAX 	SrvcEntry
-	ACCESS     not-accessible
+	ACCESS     read-only
 	STATUS     mandatory
 	DESCRIPTION 
 		""
@@ -54,7 +55,7 @@ SrvcEntry ::= SEQUENCE {
 
 srvcIndex  OBJECT-TYPE
 	SYNTAX     INTEGER
-	ACCESS     read-write
+	ACCESS     read-only
 	STATUS     mandatory
 	DESCRIPTION
 		""
@@ -62,7 +63,7 @@ srvcIndex  OBJECT-TYPE
 
 srvcDescr  OBJECT-TYPE
 	SYNTAX     OCTET STRING
-	ACCESS     read-write
+	ACCESS     read-only
 	STATUS     mandatory
 	DESCRIPTION 
 		""
@@ -108,7 +109,7 @@ hwBatteryLevel  OBJECT-TYPE
 
 hwGPSStatus  OBJECT-TYPE
 	SYNTAX     INTEGER (0|1)
-	ACCESS     read-write
+	ACCESS     read-only
 	STATUS     mandatory
 	DESCRIPTION 
 		"The GPS Status:
@@ -119,7 +120,7 @@ hwGPSStatus  OBJECT-TYPE
 
 hwBluetoothStatus  OBJECT-TYPE
 	SYNTAX     INTEGER (0|1)
-	ACCESS     read-write
+	ACCESS     read-only
 	STATUS     mandatory
 	DESCRIPTION 
 		"The Bluetooth Status:
@@ -130,7 +131,7 @@ hwBluetoothStatus  OBJECT-TYPE
 
 hwNetworkStatus  OBJECT-TYPE
 	SYNTAX     INTEGER (0|1)
-	ACCESS     read-write
+	ACCESS     read-only
 	STATUS     mandatory
 	DESCRIPTION 
 		"The Network Status:
@@ -138,6 +139,17 @@ hwNetworkStatus  OBJECT-TYPE
 		0 - OFF
 		1 - ON"
 	::= { hardware 5 }
+
+hwCameraStatus  OBJECT-TYPE
+	SYNTAX     INTEGER (0|1)
+	ACCESS     read-write
+	STATUS     mandatory
+	DESCRIPTION 
+		"The Network Status:
+		
+		0 - OFF
+		1 - ON"
+	::= { hardware 6 }
 
 sysModelNumber  OBJECT-TYPE
 	SYNTAX     OCTET STRING
@@ -162,6 +174,14 @@ sysUpTime  OBJECT-TYPE
 	DESCRIPTION 
 		"Device Up time since last charge"
 	::= { system 3 }
+
+mngMessage  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	ACCESS     read-write
+	STATUS     mandatory
+	DESCRIPTION 
+		"Some message from manager"
+	::= { manager 1 }
 
 
 END
