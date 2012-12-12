@@ -87,6 +87,7 @@ public class AgentService extends Service implements CommandResponder {
     @Override
     public void onCreate() {
         timer = new Timer();
+
         timer.scheduleAtFixedRate(new RefreshMIBData(), 0, 50000);
         new AgentListener().start();
     }

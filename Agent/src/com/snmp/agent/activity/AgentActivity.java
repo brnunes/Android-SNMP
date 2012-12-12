@@ -28,7 +28,7 @@ public class AgentActivity extends ActionBarActivity implements View.OnClickList
     private LinearLayout messagesReceivedScrollView;
     private ListView registeredManagersList;
     private ArrayAdapter<String> messagesReceivedAdapter;
-    private Button dangerButton;
+    //private Button dangerButton;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,14 +39,13 @@ public class AgentActivity extends ActionBarActivity implements View.OnClickList
         messagesReceivedAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
         registeredManagersList = (ListView) findViewById(R.id.list_of_registered_managers);
         registeredManagersList.setAdapter(messagesReceivedAdapter);
-        dangerButton = (Button) findViewById(R.id.danger_alert_button);
-        dangerButton.setOnClickListener(this);
+        //dangerButton = (Button) findViewById(R.id.danger_alert_button);
+        //dangerButton.setOnClickListener(this);
 
 
         Intent intent = new Intent(this, AgentService.class);
         startService(intent);
         doBindAgentService();
-
     }
 
     @Override
@@ -72,9 +71,9 @@ public class AgentActivity extends ActionBarActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.danger_alert_button:
+            /*case R.id.danger_alert_button:
                 handleSendDangerAlert();
-                break;
+                break;*/
         }
     }
 

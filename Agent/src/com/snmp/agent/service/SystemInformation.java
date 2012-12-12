@@ -37,7 +37,7 @@ public class SystemInformation {
         updateBatteryStatus();
         updateBatteryLevel();
         updateGPSStatus();
-        updateBluetoothStatus();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) updateBluetoothStatus();
         updateNetworkStatus();
 
         MIBtree.setNewMIB(MIB_MAP);

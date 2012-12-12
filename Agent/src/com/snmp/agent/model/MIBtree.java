@@ -189,7 +189,8 @@ public class MIBtree {
     }
 
     public void set(VariableBinding vb) {
-        /*OID oid = vb.getOid();
+        /*
+        OID oid = vb.getOid();
         Node aux = root;
         for(int i = 1; i < oid.size(); i++){
             aux = findNode(aux.children, oid.get(i), i);
