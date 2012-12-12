@@ -97,7 +97,7 @@ public class ManagerFrame extends javax.swing.JFrame {
 
         RangeLabel.setText("Enter range of IPs to discover:");
 
-        rangeBeginTextField.setText("192.168.0.185");
+        rangeBeginTextField.setText("192.168.0.1");
         rangeBeginTextField.setToolTipText("Enter the begin of the range");
         rangeBeginTextField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         rangeBeginTextField.addFocusListener(new java.awt.event.FocusAdapter() {

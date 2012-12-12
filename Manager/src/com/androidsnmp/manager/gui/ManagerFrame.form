@@ -155,7 +155,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="rangeBeginTextField">
       <Properties>
-        <Property name="text" type="java.lang.String" value="192.168.0.185"/>
+        <Property name="text" type="java.lang.String" value="192.168.0.1"/>
         <Property name="toolTipText" type="java.lang.String" value="Enter the begin of the range"/>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
           <Color id="Text Cursor"/>
