@@ -64,6 +64,8 @@ public class PhonePanel extends javax.swing.JPanel {
         upTimeValueLabel = new javax.swing.JLabel();
         ipLabel = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        messageTextField = new javax.swing.JTextField();
+        sendSetButton = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(640, 360));
 
@@ -100,7 +102,7 @@ public class PhonePanel extends javax.swing.JPanel {
             }
         });
 
-        batteryStatusLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/res/gps_icon.png"))); // NOI18N
+        batteryStatusLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/res/battery_status_icon.png"))); // NOI18N
         batteryStatusLabel.setText("Unknown");
         batteryStatusLabel.setToolTipText("Get Battery Status");
         batteryStatusLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -111,7 +113,7 @@ public class PhonePanel extends javax.swing.JPanel {
             }
         });
 
-        batteryLevelLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/res/gps_icon.png"))); // NOI18N
+        batteryLevelLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidsnmp/manager/gui/res/battery_level_icon.png"))); // NOI18N
         batteryLevelLabel.setText("Unknown");
         batteryLevelLabel.setToolTipText("Get Battery Level");
         batteryLevelLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -177,6 +179,21 @@ public class PhonePanel extends javax.swing.JPanel {
             }
         });
 
+        messageTextField.setText("SNMP Set Message");
+        messageTextField.setToolTipText("Message to be sent to SNMP Agent");
+        messageTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                messageTextFieldFocusGained(evt);
+            }
+        });
+
+        sendSetButton.setText("Send");
+        sendSetButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendSetButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -184,35 +201,40 @@ public class PhonePanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(upTimeLabel)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(modelLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(upTimeLabel)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(modelLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(versionLabel)
+                                            .addGap(1, 1, 1))))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(versionValueLabel)
+                                    .addComponent(upTimeValueLabel)
+                                    .addComponent(modelValueLabel)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(layout.createSequentialGroup()
-                                    .addComponent(versionLabel)
-                                    .addGap(1, 1, 1))))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(versionValueLabel)
-                            .addComponent(upTimeValueLabel)
-                            .addComponent(modelValueLabel)))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(gpsLabel)
-                            .addGap(0, 0, 0)
-                            .addComponent(networkLabel)
-                            .addGap(0, 0, 0)
-                            .addComponent(bluetoothLabel)
-                            .addGap(0, 0, 0)
-                            .addComponent(batteryStatusLabel)
-                            .addGap(0, 0, 0)
-                            .addComponent(batteryLevelLabel))
-                        .addComponent(ipLabel)
-                        .addComponent(servicesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                    .addComponent(gpsLabel)
+                                    .addGap(0, 0, 0)
+                                    .addComponent(networkLabel)
+                                    .addGap(0, 0, 0)
+                                    .addComponent(bluetoothLabel)
+                                    .addGap(0, 0, 0)
+                                    .addComponent(batteryStatusLabel)
+                                    .addGap(0, 0, 0)
+                                    .addComponent(batteryLevelLabel))
+                                .addComponent(ipLabel)
+                                .addComponent(servicesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(0, 268, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(227, 227, 227)
-                        .addComponent(jButton1)))
+                        .addComponent(messageTextField)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(sendSetButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -237,10 +259,14 @@ public class PhonePanel extends javax.swing.JPanel {
                     .addComponent(upTimeLabel)
                     .addComponent(upTimeValueLabel))
                 .addGap(18, 18, 18)
-                .addComponent(servicesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(servicesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
-                .addGap(3, 3, 3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(messageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sendSetButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(ipLabel))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -300,6 +326,14 @@ public class PhonePanel extends javax.swing.JPanel {
         device.updateUpTime();
     }//GEN-LAST:event_upTimeValueLabelMouseClicked
 
+    private void messageTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_messageTextFieldFocusGained
+        messageTextField.selectAll();
+    }//GEN-LAST:event_messageTextFieldFocusGained
+
+    private void sendSetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendSetButtonActionPerformed
+        device.sendMessage(messageTextField.getText());
+    }//GEN-LAST:event_sendSetButtonActionPerformed
+
     public void setIpLabel(String text) {
         ipLabel.setText("IP: " + text);
     }
@@ -354,9 +388,11 @@ public class PhonePanel extends javax.swing.JPanel {
     private javax.swing.JLabel gpsLabel;
     private javax.swing.JLabel ipLabel;
     private javax.swing.JButton jButton1;
+    private javax.swing.JTextField messageTextField;
     private javax.swing.JLabel modelLabel;
     private javax.swing.JLabel modelValueLabel;
     private javax.swing.JLabel networkLabel;
+    private javax.swing.JButton sendSetButton;
     private javax.swing.JScrollPane servicesScrollPane;
     private javax.swing.JTable servicesTable;
     private javax.swing.JLabel upTimeLabel;
