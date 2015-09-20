@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Volumes/Macintosh%20HD/Users/brnunes/Documents/Workspace/github/Android-SNMP/Agent/app/src/main/res/values/colors.xml -->
+    <eat-comment/>
+    <color name="actionbar_title_color">#224894</color>
+    <declare-styleable name="AppTheme"><attr format="reference" name="actionbarCompatTitleStyle"/><attr format="reference" name="actionbarCompatItemStyle"/><attr format="reference" name="actionbarCompatItemHomeStyle"/><attr format="reference" name="actionbarCompatProgressIndicatorStyle"/></declare-styleable>
+    <declare-styleable name="BezelImageView"><attr format="reference" name="maskDrawable"/><attr format="reference" name="borderDrawable"/></declare-styleable>
+    <!-- From: file:/Volumes/Macintosh%20HD/Users/brnunes/Documents/Workspace/github/Android-SNMP/Agent/app/src/main/res/values/dimens.xml -->
+    <eat-comment/>
+    <dimen name="actionbar_compat_button_home_width">56dp</dimen>
+    <dimen name="actionbar_compat_button_width">48dp</dimen>
+    <dimen name="actionbar_compat_height">48dp</dimen>
+    <!-- From: file:/Volumes/Macintosh%20HD/Users/brnunes/Documents/Workspace/github/Android-SNMP/Agent/app/src/main/res/values/ids.xml -->
+    <eat-comment/>
+    <item name="actionbar_compat" type="id"/>
+    <item name="actionbar_compat_item_refresh" type="id"/>
+    <item name="actionbar_compat_item_refresh_progress" type="id"/>
+    <item name="actionbar_compat_title" type="id"/>
+    <item name="menu_refresh" type="id"/>
+    <!-- From: file:/Volumes/Macintosh%20HD/Users/brnunes/Documents/Workspace/github/Android-SNMP/Agent/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="alternate_title">An alternate title that is long</string>
+    <string name="app_name">Agent</string>
+    <string name="danger_alert_button">Send Danger Warning</string>
+    <string name="last_snmp_request">Last SNMP Request:</string>
+    <string name="last_snmp_request_get">Last GET:</string>
+    <string name="list_of_managers_label">Registered Managers</string>
+    <string name="list_of_messages_from_managers_label">Messages from Managers</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_share">Share</string>
+    <string name="toggle_title">Toggle title</string>
+    <!-- From: file:/Volumes/Macintosh%20HD/Users/brnunes/Documents/Workspace/github/Android-SNMP/Agent/app/src/main/res/values/styles.xml -->
+    <eat-comment/>
+    <style name="ActionBarCompat">
+        <item name="android:background">#eee</item>
+    </style>
+    <style name="ActionBarCompatHomeItem" parent="style/ActionBarCompatItemBase">
+    </style>
+    <style name="ActionBarCompatItem" parent="style/ActionBarCompatItemBase">
+    </style>
+    <style name="ActionBarCompatItemBase">
+        <!-- layout_width/height must be set in code -->
+        <item name="android:scaleType">center</item>
+        <item name="android:background">@drawable/actionbar_compat_item</item>
+    </style>
+    <style name="ActionBarCompatProgressIndicator" parent="android:style/Widget.ProgressBar.Large">
+        <item name="android:indeterminate">true</item>
+    </style>
+    <style name="ActionBarCompatTitle" parent="style/ActionBarCompatTitleBase">
+        <item name="android:textColor">@color/actionbar_title_color</item>
+    </style>
+    <style name="ActionBarCompatTitleBase">
+        <item name="android:id">@id/actionbar_compat_title</item>
+        <!-- layout_width/height/weight must be set in code -->
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingRight">6dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+    </style>
+    <style name="AppTheme" parent="android:style/Theme.Light">
+        <item name="android:windowTitleSize">@dimen/actionbar_compat_height</item>
+        <item name="android:windowTitleBackgroundStyle">@style/ActionBarCompat</item>
+        <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
+
+        <!-- for programmatic instantiation -->
+        <item name="actionbarCompatTitleStyle">@style/ActionBarCompatTitle</item>
+        <item name="actionbarCompatItemStyle">@style/ActionBarCompatItem</item>
+        <item name="actionbarCompatItemHomeStyle">@style/ActionBarCompatHomeItem</item>
+        <item name="actionbarCompatProgressIndicatorStyle">@style/ActionBarCompatProgressIndicator</item>
+    </style>
+</resources>
