@@ -162,6 +162,20 @@ public class ManagedDevice {
         });
     }
     
+    public void updateEverything() {
+    	updateGPSStatus();
+    	updateNetworkStatus();
+    	updateBluetoothStatus();
+    	updateBatteryStatus();
+    	updateBatteryLevel();
+    	
+    	updateModelName();
+    	updateVersionName();
+    	updateUpTime();
+    	
+    	updateTableData();
+    }
+    
     public void updateTableData() {
         OID[] columns = new OID[]{new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,1}), 
                                 new OID(new int[] {1,3,6,1,4,1,12619,1,2,2,1,2}),

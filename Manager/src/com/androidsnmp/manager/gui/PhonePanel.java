@@ -63,7 +63,8 @@ public class PhonePanel extends javax.swing.JPanel {
         upTimeLabel = new javax.swing.JLabel();
         upTimeValueLabel = new javax.swing.JLabel();
         ipLabel = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        refreshEverythingButton = new javax.swing.JButton();
+        refreshTableButton = new javax.swing.JButton();
         messageTextField = new javax.swing.JTextField();
         sendSetButton = new javax.swing.JButton();
 
@@ -172,10 +173,17 @@ public class PhonePanel extends javax.swing.JPanel {
 
         ipLabel.setText("IP: ");
 
-        jButton1.setText("Refresh Table");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        refreshEverythingButton.setText("Refresh Everything");
+        refreshEverythingButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+            	refreshEverythingButtonActionPerformed(evt);
+            }
+        });
+
+        refreshTableButton.setText("Refresh Table");
+        refreshTableButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	refreshTableButtonActionPerformed(evt);
             }
         });
 
@@ -229,7 +237,11 @@ public class PhonePanel extends javax.swing.JPanel {
                                     .addComponent(batteryLevelLabel))
                                 .addComponent(ipLabel)
                                 .addComponent(servicesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(refreshEverythingButton)
+                                        .addGap(0, 0, 0)
+                                        .addComponent(refreshTableButton))))
                         .addGap(0, 268, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(messageTextField)
@@ -261,7 +273,9 @@ public class PhonePanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(servicesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(refreshEverythingButton)
+                        .addComponent(refreshTableButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(messageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -309,8 +323,12 @@ public class PhonePanel extends javax.swing.JPanel {
     private void upTimeLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_upTimeLabelMouseClicked
         device.updateUpTime();
     }//GEN-LAST:event_upTimeLabelMouseClicked
+    
+    private void refreshEverythingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        device.updateEverything();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void refreshTableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         device.updateTableData();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -387,7 +405,8 @@ public class PhonePanel extends javax.swing.JPanel {
     private javax.swing.JLabel bluetoothLabel;
     private javax.swing.JLabel gpsLabel;
     private javax.swing.JLabel ipLabel;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton refreshEverythingButton;
+    private javax.swing.JButton refreshTableButton;
     private javax.swing.JTextField messageTextField;
     private javax.swing.JLabel modelLabel;
     private javax.swing.JLabel modelValueLabel;

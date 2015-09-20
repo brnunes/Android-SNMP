@@ -8,6 +8,8 @@ import com.androidsnmp.manager.main.AndroidSNMPManager;
 import com.androidsnmp.manager.main.SNMPMessenger;
 import com.androidsnmp.manager.models.ManagedDevice;
 import java.awt.CardLayout;
+import java.net.SocketException;
+
 import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -96,9 +98,23 @@ public class ManagerFrame extends javax.swing.JFrame {
         });
 
         RangeLabel.setText("Enter range of IPs to discover:");
+        
+        String address = null;
+        
+        try {
+			address = androidSMNPManager.getLocalNetworkBroadcastAddress();
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+        
+        if(address != null && address.endsWith("255")) {
+        	address = address.substring(0, address.length() - 3);
+        } else {
+        	address = "192.168.0.";
+        }
 
-        rangeBeginTextField.setText("192.168.0.1");
-        rangeBeginTextField.setToolTipText("Enter the begin of the range");
+        rangeBeginTextField.setText(address + "1");
+        rangeBeginTextField.setToolTipText("Enter the first address of the range");
         rangeBeginTextField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         rangeBeginTextField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -106,8 +122,8 @@ public class ManagerFrame extends javax.swing.JFrame {
             }
         });
 
-        rangeEndTextField.setText("192.168.0.255");
-        rangeEndTextField.setToolTipText("Enter the end of the range");
+        rangeEndTextField.setText(address + "254");
+        rangeEndTextField.setToolTipText("Enter the last address of the range");
         rangeEndTextField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 rangeEndTextFieldFocusGained(evt);
@@ -292,6 +308,7 @@ public class ManagerFrame extends javax.swing.JFrame {
     public void addPhonePanel(ManagedDevice device, Object constraints) {
         dummyPhonePanel.add(device.getPhonePanel(), constraints);
         devicesList.setSelectedValue(device, true);
+        device.updateEverything();
     }
     
     public void removePhonePanel(PhonePanel phonePanel) {
