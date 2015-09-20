@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/Volumes/Macintosh%20HD/Users/brnunes/Documents/Workspace/github/Android-SNMP/Agent/app/src/main/res/values-v13/styles.xml -->
-    <eat-comment/>
-    <style name="ActionBarTitle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/actionbar_title_color</item>
-    </style>
-</resources>
